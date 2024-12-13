@@ -2,10 +2,10 @@ package seeders
 
 import (
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/internal/datasources/records"
-	"github.com/snykk/go-rest-boilerplate/pkg/helpers"
-	"github.com/snykk/go-rest-boilerplate/pkg/logger"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/internal/datasources/records"
+	"github.com/snykk/find-best-cook/pkg/helpers"
+	"github.com/snykk/find-best-cook/pkg/logger"
 )
 
 var pass string

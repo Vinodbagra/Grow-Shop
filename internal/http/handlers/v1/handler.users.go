@@ -5,13 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	V1Domains "github.com/snykk/go-rest-boilerplate/internal/business/domains/v1"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/internal/datasources/caches"
-	"github.com/snykk/go-rest-boilerplate/internal/http/datatransfers/requests"
-	"github.com/snykk/go-rest-boilerplate/internal/http/datatransfers/responses"
-	"github.com/snykk/go-rest-boilerplate/pkg/jwt"
-	"github.com/snykk/go-rest-boilerplate/pkg/validators"
+	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/internal/datasources/caches"
+	"github.com/snykk/find-best-cook/internal/http/datatransfers/requests"
+	"github.com/snykk/find-best-cook/internal/http/datatransfers/responses"
+	"github.com/snykk/find-best-cook/pkg/jwt"
+	"github.com/snykk/find-best-cook/pkg/validators"
 )
 
 type UserHandler struct {

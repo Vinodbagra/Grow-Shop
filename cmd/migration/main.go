@@ -10,10 +10,10 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/go-rest-boilerplate/internal/config"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/internal/utils"
-	"github.com/snykk/go-rest-boilerplate/pkg/logger"
+	"github.com/snykk/find-best-cook/internal/config"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/internal/utils"
+	"github.com/snykk/find-best-cook/pkg/logger"
 )
 
 const (

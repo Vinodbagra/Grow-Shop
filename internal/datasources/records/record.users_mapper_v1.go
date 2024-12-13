@@ -1,7 +1,7 @@
 package records
 
 import (
-	V1Domains "github.com/snykk/go-rest-boilerplate/internal/business/domains/v1"
+	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
 )
 
 func (u *Users) ToV1Domain() V1Domains.UserDomain {

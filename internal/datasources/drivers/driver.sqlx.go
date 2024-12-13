@@ -7,8 +7,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/pkg/logger"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/pkg/logger"
 )
 
 // SQLXConfig holds the configuration for the database instance

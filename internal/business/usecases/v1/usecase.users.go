@@ -7,11 +7,11 @@ import (
 	"net/http"
 	"time"
 
-	V1Domains "github.com/snykk/go-rest-boilerplate/internal/business/domains/v1"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/pkg/helpers"
-	"github.com/snykk/go-rest-boilerplate/pkg/jwt"
-	"github.com/snykk/go-rest-boilerplate/pkg/mailer"
+	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/pkg/helpers"
+	"github.com/snykk/find-best-cook/pkg/jwt"
+	"github.com/snykk/find-best-cook/pkg/mailer"
 )
 
 type userUsecase struct {

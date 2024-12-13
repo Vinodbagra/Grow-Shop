@@ -3,12 +3,12 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
-	V1Usecase "github.com/snykk/go-rest-boilerplate/internal/business/usecases/v1"
-	"github.com/snykk/go-rest-boilerplate/internal/datasources/caches"
-	V1PostgresRepository "github.com/snykk/go-rest-boilerplate/internal/datasources/repositories/postgres/v1"
-	V1Handler "github.com/snykk/go-rest-boilerplate/internal/http/handlers/v1"
-	"github.com/snykk/go-rest-boilerplate/pkg/jwt"
-	"github.com/snykk/go-rest-boilerplate/pkg/mailer"
+	V1Usecase "github.com/snykk/find-best-cook/internal/business/usecases/v1"
+	"github.com/snykk/find-best-cook/internal/datasources/caches"
+	V1PostgresRepository "github.com/snykk/find-best-cook/internal/datasources/repositories/postgres/v1"
+	V1Handler "github.com/snykk/find-best-cook/internal/http/handlers/v1"
+	"github.com/snykk/find-best-cook/pkg/jwt"
+	"github.com/snykk/find-best-cook/pkg/mailer"
 )
 
 type usersRoutes struct {

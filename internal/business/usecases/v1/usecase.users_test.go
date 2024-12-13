@@ -7,12 +7,12 @@ import (
 	"testing"
 	"time"
 
-	V1Domains "github.com/snykk/go-rest-boilerplate/internal/business/domains/v1"
-	V1Usecases "github.com/snykk/go-rest-boilerplate/internal/business/usecases/v1"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/internal/http/datatransfers/requests"
-	"github.com/snykk/go-rest-boilerplate/internal/mocks"
-	"github.com/snykk/go-rest-boilerplate/pkg/helpers"
+	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
+	V1Usecases "github.com/snykk/find-best-cook/internal/business/usecases/v1"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/internal/http/datatransfers/requests"
+	"github.com/snykk/find-best-cook/internal/mocks"
+	"github.com/snykk/find-best-cook/pkg/helpers"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )

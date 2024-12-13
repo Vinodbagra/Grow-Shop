@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snykk/go-rest-boilerplate/pkg/helpers"
+	"github.com/snykk/find-best-cook/pkg/helpers"
 )
 
 func TestGenerateHash(t *testing.T) {

@@ -12,15 +12,15 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/go-rest-boilerplate/internal/config"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/internal/datasources/caches"
-	"github.com/snykk/go-rest-boilerplate/internal/http/middlewares"
-	"github.com/snykk/go-rest-boilerplate/internal/http/routes"
-	"github.com/snykk/go-rest-boilerplate/internal/utils"
-	"github.com/snykk/go-rest-boilerplate/pkg/jwt"
-	"github.com/snykk/go-rest-boilerplate/pkg/logger"
-	"github.com/snykk/go-rest-boilerplate/pkg/mailer"
+	"github.com/snykk/find-best-cook/internal/config"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/internal/datasources/caches"
+	"github.com/snykk/find-best-cook/internal/http/middlewares"
+	"github.com/snykk/find-best-cook/internal/http/routes"
+	"github.com/snykk/find-best-cook/internal/utils"
+	"github.com/snykk/find-best-cook/pkg/jwt"
+	"github.com/snykk/find-best-cook/pkg/logger"
+	"github.com/snykk/find-best-cook/pkg/mailer"
 )
 
 type App struct {

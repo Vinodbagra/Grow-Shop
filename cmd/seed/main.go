@@ -3,11 +3,11 @@ package main
 import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/go-rest-boilerplate/cmd/seed/seeders"
-	"github.com/snykk/go-rest-boilerplate/internal/config"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	"github.com/snykk/go-rest-boilerplate/internal/utils"
-	"github.com/snykk/go-rest-boilerplate/pkg/logger"
+	"github.com/snykk/find-best-cook/cmd/seed/seeders"
+	"github.com/snykk/find-best-cook/internal/config"
+	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/find-best-cook/internal/utils"
+	"github.com/snykk/find-best-cook/pkg/logger"
 )
 
 func init() {

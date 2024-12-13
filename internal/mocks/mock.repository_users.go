@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	V1Domains "github.com/snykk/go-rest-boilerplate/internal/business/domains/v1"
+	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
 	mock "github.com/stretchr/testify/mock"
 )
 

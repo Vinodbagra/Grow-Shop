@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snykk/go-rest-boilerplate/internal/constants"
-	V1Handler "github.com/snykk/go-rest-boilerplate/internal/http/handlers/v1"
-	"github.com/snykk/go-rest-boilerplate/pkg/jwt"
+	"github.com/snykk/find-best-cook/internal/constants"
+	V1Handler "github.com/snykk/find-best-cook/internal/http/handlers/v1"
+	"github.com/snykk/find-best-cook/pkg/jwt"
 )
 
 type AuthMiddleware struct {
