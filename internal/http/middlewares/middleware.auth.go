@@ -4,20 +4,16 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snykk/find-best-cook/internal/constants"
-	V1Handler "github.com/snykk/find-best-cook/internal/http/handlers/v1"
-	"github.com/snykk/find-best-cook/pkg/jwt"
+	V1Handler "github.com/snykk/grow-shop/internal/http/handlers/v1"
 )
 
 type AuthMiddleware struct {
-	jwtService jwt.JWTService
-	isAdmin    bool
+	isAdmin bool
 }
 
-func NewAuthMiddleware(jwtService jwt.JWTService, isAdmin bool) gin.HandlerFunc {
+func NewAuthMiddleware(isAdmin bool) gin.HandlerFunc {
 	return (&AuthMiddleware{
-		jwtService: jwtService,
-		isAdmin:    isAdmin,
+		isAdmin: isAdmin,
 	}).Handle
 }
 
@@ -39,17 +35,17 @@ func (m *AuthMiddleware) Handle(ctx *gin.Context) {
 		return
 	}
 
-	user, err := m.jwtService.ParseToken(headerParts[1])
-	if err != nil {
-		V1Handler.NewAbortResponse(ctx, "invalid token")
-		return
-	}
+	// user, err := m.jwtService.ParseToken(headerParts[1])
+	// if err != nil {
+	// 	V1Handler.NewAbortResponse(ctx, "invalid token")
+	// 	return
+	// }
 
-	if user.IsAdmin != m.isAdmin && !user.IsAdmin {
-		V1Handler.NewAbortResponse(ctx, "you don't have access for this action")
-		return
-	}
+	// if user.IsAdmin != m.isAdmin && !user.IsAdmin {
+	// 	V1Handler.NewAbortResponse(ctx, "you don't have access for this action")
+	// 	return
+	// }
 
-	ctx.Set(constants.CtxAuthenticatedUserKey, user)
+	// ctx.Set(constants.CtxAuthenticatedUserKey, user)
 	ctx.Next()
 }

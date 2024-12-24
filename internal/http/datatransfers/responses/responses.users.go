@@ -3,7 +3,7 @@ package responses
 import (
 	"time"
 
-	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
 )
 
 type UserResponse struct {

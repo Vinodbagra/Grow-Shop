@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/http/middlewares"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/http/middlewares"
 	"github.com/stretchr/testify/assert"
 )
 

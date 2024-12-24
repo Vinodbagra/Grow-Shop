@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/pkg/helpers"
-	"github.com/snykk/find-best-cook/pkg/logger"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/pkg/helpers"
+	"github.com/snykk/grow-shop/pkg/logger"
 )
 
 func CORSMiddleware() gin.HandlerFunc {

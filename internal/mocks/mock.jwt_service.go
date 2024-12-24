@@ -3,7 +3,7 @@
 package mocks
 
 import (
-	jwt "github.com/snykk/find-best-cook/pkg/jwt"
+	jwt "github.com/snykk/grow-shop/pkg/jwt"
 	mock "github.com/stretchr/testify/mock"
 )
 

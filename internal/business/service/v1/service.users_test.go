@@ -7,12 +7,12 @@ import (
 	"testing"
 	"time"
 
-	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
-	V1Usecases "github.com/snykk/find-best-cook/internal/business/usecases/v1"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/http/datatransfers/requests"
-	"github.com/snykk/find-best-cook/internal/mocks"
-	"github.com/snykk/find-best-cook/pkg/helpers"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	V1Usecases "github.com/snykk/grow-shop/internal/business/service/v1"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/http/datatransfers/requests"
+	"github.com/snykk/grow-shop/internal/mocks"
+	"github.com/snykk/grow-shop/pkg/helpers"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -30,7 +30,7 @@ func setup(t *testing.T) {
 	mailerOTPMock = mocks.NewOTPMailer(t)
 	jwtServiceMock = mocks.NewJWTService(t)
 	userRepoMock = mocks.NewUserRepository(t)
-	userUsecase = V1Usecases.NewUserUsecase(userRepoMock, jwtServiceMock, mailerOTPMock)
+	userUsecase = V1Usecases.NewUserUsecase(userRepoMock, mailerOTPMock)
 	usersDataFromDB = []V1Domains.UserDomain{
 		{
 			ID:        "ddfcea5c-d919-4a8f-a631-4ace39337s3a",
@@ -66,7 +66,7 @@ func setup(t *testing.T) {
 func TestStore(t *testing.T) {
 	setup(t)
 	req := requests.UserRequest{
-		Username: "itsmepatrick",
+		
 		Email:    "najibfikri13@gmail.com",
 		Password: "11111",
 	}

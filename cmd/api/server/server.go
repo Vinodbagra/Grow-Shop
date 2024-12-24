@@ -12,15 +12,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/find-best-cook/internal/config"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/datasources/caches"
-	"github.com/snykk/find-best-cook/internal/http/middlewares"
-	"github.com/snykk/find-best-cook/internal/http/routes"
-	"github.com/snykk/find-best-cook/internal/utils"
-	"github.com/snykk/find-best-cook/pkg/jwt"
-	"github.com/snykk/find-best-cook/pkg/logger"
-	"github.com/snykk/find-best-cook/pkg/mailer"
+	"github.com/snykk/grow-shop/internal/config"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/datasources/caches"
+	"github.com/snykk/grow-shop/internal/http/middlewares"
+	"github.com/snykk/grow-shop/internal/http/routes"
+	"github.com/snykk/grow-shop/internal/utils"
+	"github.com/snykk/grow-shop/pkg/logger"
+	"github.com/snykk/grow-shop/pkg/mailer"
 )
 
 type App struct {
@@ -38,30 +37,26 @@ func NewApp() (*App, error) {
 	router := setupRouter()
 
 	// jwt service
-	jwtService := jwt.NewJWTService(config.AppConfig.JWTSecret, config.AppConfig.JWTIssuer, config.AppConfig.JWTExpired)
+	// jwtService := jwt.NewJWTService(config.AppConfig.JWTSecret, config.AppConfig.JWTIssuer, config.AppConfig.JWTExpired)
 
 	// cache
 	redisCache := caches.NewRedisCache(config.AppConfig.REDISHost, 0, config.AppConfig.REDISPassword, time.Duration(config.AppConfig.REDISExpired))
-	ristrettoCache, err := caches.NewRistrettoCache()
-	if err != nil {
-		panic(err)
-	}
 
 	// mailer
 	mailerService := mailer.NewOTPMailer(config.AppConfig.OTPEmail, config.AppConfig.OTPPassword)
 
 	// user middleware
 	// user with valid basic token can access endpoint
-	authMiddleware := middlewares.NewAuthMiddleware(jwtService, false)
+	authMiddleware := middlewares.NewAuthMiddleware( false)
 
 	// admin middleware
 	// only user with valid admin token can access endpoint
-	_ = middlewares.NewAuthMiddleware(jwtService, true)
+	_ = middlewares.NewAuthMiddleware(true)
 
 	// API Routes
 	api := router.Group("api")
 	api.GET("/", routes.RootHandler)
-	routes.NewUsersRoute(api, conn, jwtService, redisCache, ristrettoCache, authMiddleware, mailerService).Routes()
+	routes.NewUsersRoute(api, conn, redisCache, authMiddleware, mailerService).Routes()
 
 	// we can add web pages if needed
 	// web := router.Group("web")

@@ -3,12 +3,11 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
-	V1Usecase "github.com/snykk/find-best-cook/internal/business/usecases/v1"
-	"github.com/snykk/find-best-cook/internal/datasources/caches"
-	V1PostgresRepository "github.com/snykk/find-best-cook/internal/datasources/repositories/postgres/v1"
-	V1Handler "github.com/snykk/find-best-cook/internal/http/handlers/v1"
-	"github.com/snykk/find-best-cook/pkg/jwt"
-	"github.com/snykk/find-best-cook/pkg/mailer"
+	V1Usecase "github.com/snykk/grow-shop/internal/business/service/v1"
+	"github.com/snykk/grow-shop/internal/datasources/caches"
+	V1PostgresRepository "github.com/snykk/grow-shop/internal/datasources/repositories/postgres/v1"
+	V1Handler "github.com/snykk/grow-shop/internal/http/handlers/v1"
+	"github.com/snykk/grow-shop/pkg/mailer"
 )
 
 type usersRoutes struct {
@@ -18,10 +17,10 @@ type usersRoutes struct {
 	authMiddleware gin.HandlerFunc
 }
 
-func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, jwtService jwt.JWTService, redisCache caches.RedisCache, ristrettoCache caches.RistrettoCache, authMiddleware gin.HandlerFunc, mailer mailer.OTPMailer) *usersRoutes {
+func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.RedisCache, authMiddleware gin.HandlerFunc, mailer mailer.OTPMailer) *usersRoutes {
 	V1UserRepository := V1PostgresRepository.NewUserRepository(db)
-	V1UserUsecase := V1Usecase.NewUserUsecase(V1UserRepository, jwtService, mailer)
-	V1UserHandler := V1Handler.NewUserHandler(V1UserUsecase, redisCache, ristrettoCache)
+	V1UserUsecase := V1Usecase.NewUserUsecase(V1UserRepository, mailer)
+	V1UserHandler := V1Handler.NewUserHandler(V1UserUsecase, redisCache)
 
 	return &usersRoutes{V1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
 }

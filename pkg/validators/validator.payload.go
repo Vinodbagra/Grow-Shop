@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/snykk/find-best-cook/pkg/helpers"
+	"github.com/snykk/grow-shop/pkg/helpers"
 )
 
 var mapHelepr = map[string]string{

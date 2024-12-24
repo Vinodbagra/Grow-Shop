@@ -7,8 +7,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/pkg/logger"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/pkg/logger"
 )
 
 // SQLXConfig holds the configuration for the database instance

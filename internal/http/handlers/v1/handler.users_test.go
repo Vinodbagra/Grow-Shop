@@ -11,15 +11,15 @@ import (
 
 	dgriJWT "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
-	V1Usecases "github.com/snykk/find-best-cook/internal/business/usecases/v1"
-	"github.com/snykk/find-best-cook/internal/config"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/http/datatransfers/requests"
-	V1Handlers "github.com/snykk/find-best-cook/internal/http/handlers/v1"
-	"github.com/snykk/find-best-cook/internal/mocks"
-	"github.com/snykk/find-best-cook/pkg/helpers"
-	"github.com/snykk/find-best-cook/pkg/jwt"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	V1Usecases "github.com/snykk/grow-shop/internal/business/service/v1"
+	"github.com/snykk/grow-shop/internal/config"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/http/datatransfers/requests"
+	V1Handlers "github.com/snykk/grow-shop/internal/http/handlers/v1"
+	"github.com/snykk/grow-shop/internal/mocks"
+	"github.com/snykk/grow-shop/pkg/helpers"
+	"github.com/snykk/grow-shop/pkg/jwt"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 )
@@ -43,8 +43,8 @@ func setup(t *testing.T) {
 	mailerOTPMock = mocks.NewOTPMailer(t)
 	ristrettoMock = mocks.NewRistrettoCache(t)
 	userRepoMock = mocks.NewUserRepository(t)
-	userUsecase = V1Usecases.NewUserUsecase(userRepoMock, jwtServiceMock, mailerOTPMock)
-	userHandler = V1Handlers.NewUserHandler(userUsecase, redisMock, ristrettoMock)
+	userUsecase = V1Usecases.NewUserUsecase(userRepoMock, mailerOTPMock)
+	userHandler = V1Handlers.NewUserHandler(userUsecase, redisMock)
 
 	usersDataFromDB = []V1Domains.UserDomain{
 		{
@@ -106,7 +106,6 @@ func TestRegis(t *testing.T) {
 	s.POST(constants.EndpointV1+"/auth/regis", userHandler.Regis)
 	t.Run("When Success Regis", func(t *testing.T) {
 		req := requests.UserRequest{
-			Username: "itsmepatrick",
 			Email:    "najibfikri13@gmail.com",
 			Password: "23123sdf!",
 		}

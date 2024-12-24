@@ -1,4 +1,4 @@
-module github.com/snykk/find-best-cook
+module github.com/snykk/grow-shop
 
 go 1.19
 

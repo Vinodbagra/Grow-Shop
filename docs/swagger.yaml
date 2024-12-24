@@ -9,7 +9,7 @@ info:
 
   license:
     name: MIT License
-    url: https://github.com/snykk/find-best-cook/blob/master/LICENSE
+    url: https://github.com/snykk/grow-shop/blob/master/LICENSE
 securityDefinitions:
   Bearer:
     type: apiKey

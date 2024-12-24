@@ -5,26 +5,24 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/datasources/caches"
-	"github.com/snykk/find-best-cook/internal/http/datatransfers/requests"
-	"github.com/snykk/find-best-cook/internal/http/datatransfers/responses"
-	"github.com/snykk/find-best-cook/pkg/jwt"
-	"github.com/snykk/find-best-cook/pkg/validators"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/datasources/caches"
+	"github.com/snykk/grow-shop/internal/http/datatransfers/requests"
+	"github.com/snykk/grow-shop/internal/http/datatransfers/responses"
+	"github.com/snykk/grow-shop/pkg/jwt"
+	"github.com/snykk/grow-shop/pkg/validators"
 )
 
 type UserHandler struct {
 	usecase        V1Domains.UserUsecase
 	redisCache     caches.RedisCache
-	ristrettoCache caches.RistrettoCache
 }
 
-func NewUserHandler(usecase V1Domains.UserUsecase, redisCache caches.RedisCache, ristrettoCache caches.RistrettoCache) UserHandler {
+func NewUserHandler(usecase V1Domains.UserUsecase, redisCache caches.RedisCache) UserHandler {
 	return UserHandler{
 		usecase:        usecase,
 		redisCache:     redisCache,
-		ristrettoCache: ristrettoCache,
 	}
 }
 
@@ -132,7 +130,6 @@ func (userH UserHandler) VerifOTP(ctx *gin.Context) {
 	}
 
 	go userH.redisCache.Del(otpKey)
-	go userH.ristrettoCache.Del("users")
 
 	NewSuccessResponse(ctx, statusCode, "otp verification success", nil)
 }
@@ -140,12 +137,6 @@ func (userH UserHandler) VerifOTP(ctx *gin.Context) {
 func (c UserHandler) GetUserData(ctx *gin.Context) {
 	// get authenticated user from context
 	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
-	if val := c.ristrettoCache.Get(fmt.Sprintf("user/%s", userClaims.Email)); val != nil {
-		NewSuccessResponse(ctx, http.StatusOK, "user data fetched successfully", map[string]interface{}{
-			"user": val,
-		})
-		return
-	}
 
 	ctxx := ctx.Request.Context()
 	userDom, statusCode, err := c.usecase.GetByEmail(ctxx, userClaims.Email)
@@ -155,8 +146,6 @@ func (c UserHandler) GetUserData(ctx *gin.Context) {
 	}
 
 	userResponse := responses.FromV1Domain(userDom)
-
-	go c.ristrettoCache.Set(fmt.Sprintf("user/%s", userClaims.Email), userResponse)
 
 	NewSuccessResponse(ctx, statusCode, "user data fetched successfully", map[string]interface{}{
 		"user": userResponse,

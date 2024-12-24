@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/jmoiron/sqlx"
-	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
-	"github.com/snykk/find-best-cook/internal/datasources/records"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	"github.com/snykk/grow-shop/internal/datasources/records"
 )
 
 type postgreUserRepository struct {

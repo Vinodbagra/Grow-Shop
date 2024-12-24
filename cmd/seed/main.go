@@ -3,11 +3,11 @@ package main
 import (
 	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/find-best-cook/cmd/seed/seeders"
-	"github.com/snykk/find-best-cook/internal/config"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/utils"
-	"github.com/snykk/find-best-cook/pkg/logger"
+	"github.com/snykk/grow-shop/cmd/seed/seeders"
+	"github.com/snykk/grow-shop/internal/config"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/utils"
+	"github.com/snykk/grow-shop/pkg/logger"
 )
 
 func init() {

@@ -6,9 +6,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/datasources/records"
-	"github.com/snykk/find-best-cook/pkg/logger"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/datasources/records"
+	"github.com/snykk/grow-shop/pkg/logger"
 )
 
 type Seeder interface {

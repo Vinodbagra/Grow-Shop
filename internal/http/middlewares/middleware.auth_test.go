@@ -7,9 +7,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snykk/find-best-cook/internal/config"
-	"github.com/snykk/find-best-cook/internal/http/middlewares"
-	"github.com/snykk/find-best-cook/pkg/jwt"
+	"github.com/snykk/grow-shop/internal/config"
+	"github.com/snykk/grow-shop/internal/http/middlewares"
+	"github.com/snykk/grow-shop/pkg/jwt"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,8 +34,8 @@ func authenticatedHandler(ctx *gin.Context) {
 
 func setup(t *testing.T) {
 	jwtService = jwt.NewJWTService(config.AppConfig.JWTSecret, config.AppConfig.JWTIssuer, config.AppConfig.JWTExpired)
-	authBasicMiddleware = middlewares.NewAuthMiddleware(jwtService, false)
-	authAdminMiddleware = middlewares.NewAuthMiddleware(jwtService, true)
+	authBasicMiddleware = middlewares.NewAuthMiddleware(false)
+	authAdminMiddleware = middlewares.NewAuthMiddleware(true)
 
 	s = gin.New()
 	s.GET(forEveryone, authBasicMiddleware, authenticatedHandler)

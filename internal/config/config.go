@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/snykk/find-best-cook/internal/constants"
+	"github.com/snykk/grow-shop/internal/constants"
 	"github.com/spf13/viper"
 )
 

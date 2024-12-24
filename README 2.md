@@ -1,4 +1,4 @@
-# find-best-cook
+# grow-shop
 
 A great starting point for building RESTful APIs in Go using Gin framework, and sqlx for connecting to a PostgreSQL database. The implementation follows Clean Architecture principles as described by Uncle Bob.
 
@@ -20,14 +20,14 @@ A great starting point for building RESTful APIs in Go using Gin framework, and 
 -   Go version 1.17 or higher
 -   PostgreSQL version 9.1 or higher
 
-To get up and running with the Find-BEST-Cook, follow these simple steps:
+To get up and running with the grow-shop, follow these simple steps:
 
 ```
-$ git clone https://github.com/snykk/find-best-cook.git
-$ cd find-best-cook
+$ git clone https://github.com/snykk/grow-shop.git
+$ cd grow-shop
 $ cp internal/config/.env.example internal/config/.env # create a copy of the example environment file, and also follow configuration steps on the difference section below
-$ go build -o find-best-cook.out cmd/api/main.go
-$ ./find-best-cook.out
+$ go build -o grow-shop.out cmd/api/main.go
+$ ./grow-shop.out
 ```
 
 #### Configuration
@@ -230,4 +230,4 @@ This project is open for contributions and suggestions. If you have an idea for 
 
 ### License
 
-This project is licensed under the MIT License. See the [LICENSE](https://github.com/snykk/find-best-cook/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/snykk/grow-shop/blob/master/LICENSE) file for details.

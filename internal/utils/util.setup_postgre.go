@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/snykk/find-best-cook/internal/config"
-	"github.com/snykk/find-best-cook/internal/constants"
-	"github.com/snykk/find-best-cook/internal/datasources/drivers"
+	"github.com/snykk/grow-shop/internal/config"
+	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/datasources/drivers"
 )
 
 func SetupPostgresConnection() (*sqlx.DB, error) {

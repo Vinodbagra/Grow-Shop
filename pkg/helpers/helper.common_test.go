@@ -3,7 +3,7 @@ package helpers_test
 import (
 	"testing"
 
-	"github.com/snykk/find-best-cook/pkg/helpers"
+	"github.com/snykk/grow-shop/pkg/helpers"
 )
 
 func TestIsArrayContains(t *testing.T) {

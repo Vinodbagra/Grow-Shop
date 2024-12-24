@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/snykk/find-best-cook/pkg/helpers"
+	"github.com/snykk/grow-shop/pkg/helpers"
 )
 
 func TestGenerateHash(t *testing.T) {

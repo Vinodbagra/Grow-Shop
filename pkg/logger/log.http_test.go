@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/snykk/find-best-cook/pkg/logger"
+	"github.com/snykk/grow-shop/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
 

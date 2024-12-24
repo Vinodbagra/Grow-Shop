@@ -1,12 +1,11 @@
 package requests
 
 import (
-	V1Domains "github.com/snykk/find-best-cook/internal/business/domains/v1"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
 )
 
 // General Request
 type UserRequest struct {
-	Username string `json:"username" validate:"required"`
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=8,containsany=!@#$%^&*()?"`
 }
@@ -14,7 +13,6 @@ type UserRequest struct {
 // Mapping General Request to Domain User
 func (user UserRequest) ToV1Domain() *V1Domains.UserDomain {
 	return &V1Domains.UserDomain{
-		Username: user.Username,
 		Email:    user.Email,
 		Password: user.Password,
 		RoleID:   2, // everyone who regis it's supposed to be users
