@@ -20,18 +20,14 @@ func init() {
 
 	UserData = []records.Users{
 		{
-			Username: "patrick star 7",
+			UserName: "patrick star 7",
 			Email:    "patrick@gmail.com",
-			Password: pass,
-			Active:   true,
-			RoleId:   1,
+			UserPassword: pass,
 		},
 		{
-			Username: "john doe",
+			UserName: "john doe",
 			Email:    "johndoe@gmail.com",
-			Password: pass,
-			Active:   false,
-			RoleId:   2,
+			UserPassword: pass,
 		},
 	}
 }

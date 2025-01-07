@@ -6,16 +6,19 @@ import (
 )
 
 type UserDomain struct {
-	ID        string
-	Username  string
-	Email     string
-	Password  string
-	Active    bool
-	Token     string
-	RoleID    int
-	CreatedAt time.Time
-	UpdatedAt *time.Time
-	DeletedAt *time.Time
+	UserID       string
+	UserName     string    
+	Email        string    
+	MobileNo     string   
+	Address      string    
+	Password     string    
+	BusinessName string    
+	Gender       string    
+	Shops        []string         
+	LicenseID    string     
+	Images       []string         
+	CreatedAt    time.Time      
+	UpdatedAt    time.Time      
 }
 
 type UserUsecase interface {

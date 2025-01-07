@@ -14,16 +14,15 @@ type UserResponse struct {
 	RoleId    int        `json:"role_id"`
 	Token     string     `json:"token,omitempty"`
 	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (u *UserResponse) ToV1Domain() V1Domains.UserDomain {
 	return V1Domains.UserDomain{
-		ID:        u.Id,
-		Username:  u.Username,
+		UserID:        u.Id,
+		UserName:  u.Username,
 		Password:  u.Password,
 		Email:     u.Email,
-		RoleID:    u.RoleId,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
@@ -31,12 +30,10 @@ func (u *UserResponse) ToV1Domain() V1Domains.UserDomain {
 
 func FromV1Domain(u V1Domains.UserDomain) UserResponse {
 	return UserResponse{
-		Id:        u.ID,
-		Username:  u.Username,
+		Id:        u.UserID,
+		Username:  u.UserName,
 		Email:     u.Email,
 		Password:  u.Password,
-		Token:     u.Token,
-		RoleId:    u.RoleID,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}

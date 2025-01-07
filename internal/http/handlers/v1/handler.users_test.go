@@ -48,32 +48,26 @@ func setup(t *testing.T) {
 
 	usersDataFromDB = []V1Domains.UserDomain{
 		{
-			ID:        "ddfcea5c-d919-4a8f-a631-4ace39337s3a",
-			Username:  "itsmepatrick",
+			UserID:        "ddfcea5c-d919-4a8f-a631-4ace39337s3a",
+			UserName:  "itsmepatrick",
 			Email:     "najibfikri13@gmail.com",
-			RoleID:    1,
 			Password:  "23123sdf!",
-			Active:    true,
 			CreatedAt: time.Now(),
 		},
 		{
-			ID:        "wifff3jd-idhd-0sis-8dua-4fiefie37kfj",
-			Username:  "johny",
+			UserID:        "wifff3jd-idhd-0sis-8dua-4fiefie37kfj",
+			UserName:  "johny",
 			Email:     "johny123@gmail.com",
-			RoleID:    2,
 			Password:  "23123sdf!",
-			Active:    true,
 			CreatedAt: time.Now(),
 		},
 	}
 
 	userDataFromDB = V1Domains.UserDomain{
-		ID:        "fjskeie8-jfk8-qke0-sksj-ksjf89e8ehfu",
-		Username:  "itsmepatrick",
+		UserID:        "fjskeie8-jfk8-qke0-sksj-ksjf89e8ehfu",
+		UserName:  "itsmepatrick",
 		Email:     "najibfikri13@gmail.com",
 		Password:  "23123sdf!",
-		RoleID:    2,
-		Active:    false,
 		CreatedAt: time.Now(),
 	}
 
@@ -87,13 +81,13 @@ func lazyAuth(ctx *gin.Context) {
 	pass, _ := helpers.GenerateHash(userDataFromDB.Password)
 	// prepare claims
 	jwtClaims := jwt.JwtCustomClaim{
-		UserID:   userDataFromDB.ID,
+		UserID:   userDataFromDB.UserID,
 		IsAdmin:  false,
 		Email:    userDataFromDB.Email,
 		Password: pass,
 		StandardClaims: dgriJWT.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * time.Duration(config.AppConfig.JWTExpired)).Unix(),
-			Issuer:    userDataFromDB.Username,
+			Issuer:    userDataFromDB.UserName,
 			IssuedAt:  time.Now().Unix(),
 		},
 	}
@@ -318,7 +312,6 @@ func TestLogin(t *testing.T) {
 			t.Error(err)
 		}
 		// make account activated
-		userDataFromDB.Active = true
 		req := requests.UserLoginRequest{
 			Email:    "patrick@gmail.com",
 			Password: "23123sdf!",

@@ -4,15 +4,18 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	V1Handler "github.com/snykk/grow-shop/internal/http/handlers/v1"
 )
 
 type AuthMiddleware struct {
+	conn    *sqlx.DB
 	isAdmin bool
 }
 
-func NewAuthMiddleware(isAdmin bool) gin.HandlerFunc {
+func NewAuthMiddleware(conn *sqlx.DB, isAdmin bool) gin.HandlerFunc {
 	return (&AuthMiddleware{
+		conn: conn,
 		isAdmin: isAdmin,
 	}).Handle
 }

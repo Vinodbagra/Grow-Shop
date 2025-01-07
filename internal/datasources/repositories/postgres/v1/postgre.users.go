@@ -21,7 +21,7 @@ func NewUserRepository(conn *sqlx.DB) V1Domains.UserRepository {
 func (r *postgreUserRepository) Store(ctx context.Context, inDom *V1Domains.UserDomain) (err error) {
 	userRecord := records.FromUsersV1Domain(inDom)
 
-	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO users(id, username, email, password, active, role_id, created_at) VALUES (uuid_generate_v4(), :username, :email, :password, false, :role_id, :created_at)`, userRecord)
+	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO users(user_id,user_name, email, password, created_at) VALUES (uuid_generate_v4(), :username, :email, :password, :created_at)`, userRecord)
 	if err != nil {
 		return err
 	}

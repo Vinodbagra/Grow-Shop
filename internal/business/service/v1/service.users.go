@@ -52,10 +52,6 @@ func (user *userUsecase) Login(ctx context.Context, inDom *V1Domains.UserDomain)
 		return V1Domains.UserDomain{}, http.StatusUnauthorized, errors.New("invalid email or password") // for security purpose better use generic error message
 	}
 
-	if !userDomain.Active {
-		return V1Domains.UserDomain{}, http.StatusForbidden, errors.New("account is not activated")
-	}
-
 	if !helpers.ValidateHash(inDom.Password, userDomain.Password) {
 		return V1Domains.UserDomain{}, http.StatusUnauthorized, errors.New("invalid email or password")
 	}
@@ -74,13 +70,9 @@ func (user *userUsecase) Login(ctx context.Context, inDom *V1Domains.UserDomain)
 }
 
 func (user *userUsecase) SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error) {
-	domain, err := user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
+	_, err = user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
 		return "", http.StatusNotFound, errors.New("email not found")
-	}
-
-	if domain.Active {
-		return "", http.StatusBadRequest, errors.New("account already activated")
 	}
 
 	code, err := helpers.GenerateOTPCode(6)
@@ -96,13 +88,9 @@ func (user *userUsecase) SendOTP(ctx context.Context, email string) (otpCode str
 }
 
 func (user *userUsecase) VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error) {
-	domain, err := user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
+	_, err = user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
 		return http.StatusNotFound, errors.New("email not found")
-	}
-
-	if domain.Active {
-		return http.StatusBadRequest, errors.New("account already activated")
 	}
 
 	if otpRedis != userOTP {
@@ -118,7 +106,7 @@ func (u *userUsecase) ActivateUser(ctx context.Context, email string) (statusCod
 		return http.StatusNotFound, errors.New("email not found")
 	}
 
-	if err = u.repo.ChangeActiveUser(ctx, &V1Domains.UserDomain{ID: user.ID, Active: true}); err != nil {
+	if err = u.repo.ChangeActiveUser(ctx, &V1Domains.UserDomain{UserID: user.UserID}); err != nil {
 		return http.StatusInternalServerError, err
 	}
 
