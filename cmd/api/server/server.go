@@ -47,11 +47,11 @@ func NewApp() (*App, error) {
 
 	// user middleware
 	// user with valid basic token can access endpoint
-	authMiddleware := middlewares.NewAuthMiddleware( false)
+	authMiddleware := middlewares.NewAuthMiddleware(conn, false)
 
 	// admin middleware
 	// only user with valid admin token can access endpoint
-	_ = middlewares.NewAuthMiddleware(true)
+	_ = middlewares.NewAuthMiddleware(conn,true)
 
 	// API Routes
 	api := router.Group("api")
