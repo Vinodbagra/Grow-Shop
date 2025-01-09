@@ -12,7 +12,7 @@ import (
 	dgriJWT "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
-	V1Usecases "github.com/snykk/grow-shop/internal/business/service/v1"
+	V1services "github.com/snykk/grow-shop/internal/business/service/v1"
 	"github.com/snykk/grow-shop/internal/config"
 	"github.com/snykk/grow-shop/internal/constants"
 	"github.com/snykk/grow-shop/internal/http/datatransfers/requests"
@@ -27,7 +27,7 @@ import (
 var (
 	jwtServiceMock  *mocks.JWTService
 	userRepoMock    *mocks.UserRepository
-	userUsecase     V1Domains.UserUsecase
+	userservice     V1services.Userservice
 	userHandler     V1Handlers.UserHandler
 	mailerOTPMock   *mocks.OTPMailer
 	usersDataFromDB []V1Domains.UserDomain
@@ -43,19 +43,19 @@ func setup(t *testing.T) {
 	mailerOTPMock = mocks.NewOTPMailer(t)
 	ristrettoMock = mocks.NewRistrettoCache(t)
 	userRepoMock = mocks.NewUserRepository(t)
-	userUsecase = V1Usecases.NewUserUsecase(userRepoMock, mailerOTPMock)
-	userHandler = V1Handlers.NewUserHandler(userUsecase, redisMock)
+	userservice = V1services.NewUserservice(userRepoMock, mailerOTPMock)
+	userHandler = V1Handlers.NewUserHandler(userservice, redisMock)
 
 	usersDataFromDB = []V1Domains.UserDomain{
 		{
-			UserID:        "ddfcea5c-d919-4a8f-a631-4ace39337s3a",
+			UserID:    "ddfcea5c-d919-4a8f-a631-4ace39337s3a",
 			UserName:  "itsmepatrick",
 			Email:     "najibfikri13@gmail.com",
 			Password:  "23123sdf!",
 			CreatedAt: time.Now(),
 		},
 		{
-			UserID:        "wifff3jd-idhd-0sis-8dua-4fiefie37kfj",
+			UserID:    "wifff3jd-idhd-0sis-8dua-4fiefie37kfj",
 			UserName:  "johny",
 			Email:     "johny123@gmail.com",
 			Password:  "23123sdf!",
@@ -64,7 +64,7 @@ func setup(t *testing.T) {
 	}
 
 	userDataFromDB = V1Domains.UserDomain{
-		UserID:        "fjskeie8-jfk8-qke0-sksj-ksjf89e8ehfu",
+		UserID:    "fjskeie8-jfk8-qke0-sksj-ksjf89e8ehfu",
 		UserName:  "itsmepatrick",
 		Email:     "najibfikri13@gmail.com",
 		Password:  "23123sdf!",

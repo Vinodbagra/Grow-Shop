@@ -7,27 +7,18 @@ import (
 
 type UserDomain struct {
 	UserID       string
-	UserName     string    
-	Email        string    
-	MobileNo     string   
-	Address      string    
-	Password     string    
-	BusinessName string    
-	Gender       string    
-	Shops        []string         
-	LicenseID    string     
-	Images       []string         
-	CreatedAt    time.Time      
-	UpdatedAt    time.Time      
-}
-
-type UserUsecase interface {
-	Store(ctx context.Context, inDom *UserDomain) (outDom UserDomain, statusCode int, err error)
-	Login(ctx context.Context, inDom *UserDomain) (outDom UserDomain, statusCode int, err error)
-	SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error)
-	VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error)
-	ActivateUser(ctx context.Context, email string) (statusCode int, err error)
-	GetByEmail(ctx context.Context, email string) (outDom UserDomain, statusCode int, err error)
+	UserName     string
+	Email        string
+	MobileNo     string
+	Address      string
+	Password     string
+	BusinessName string
+	Gender       string
+	Shops        []string
+	LicenseID    string
+	Images       []string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 type UserRepository interface {

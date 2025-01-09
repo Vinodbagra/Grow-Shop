@@ -94,10 +94,10 @@ root/
 |   |   |-- domains
 |   |   |   |-- v1
 |   |   |       |-- domains.users.go
-|   |   |-- usecases
+|   |   |-- services
 |   |       |-- v1
-|   |           |-- usecase.users.go
-|   |           |-- usecase.users_test.go
+|   |           |-- service.users.go
+|   |           |-- service.users_test.go
 |   |-- config/
 |   |   |-- .env
 |   |   |-- .env.example
@@ -186,7 +186,7 @@ This folder contains all the business logic and other implementation details of 
 
     -   domains folder: This folder contains domain-specific logic, such as the business rules for creating, updating, and deleting users.
 
-    -   usecases folder: This folder contains the implementation of the use cases that are defined in the domains folder.
+    -   services folder: This folder contains the implementation of the use cases that are defined in the domains folder.
 
 -   `config` folder
 

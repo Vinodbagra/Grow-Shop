@@ -7,29 +7,29 @@ import (
 func (u *Users) ToV1Domain() V1Domains.UserDomain {
 	return V1Domains.UserDomain{
 		UserID:        u.UserID,
-		UserName:  u.UserName,
-		Email:     u.Email,
-		Password:  u.UserPassword,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		UserName:  	   u.UserName,
+		Email:         u.Email,
+		Password:      u.UserPassword,
+		CreatedAt:     u.CreatedAt,
+		UpdatedAt:     u.UpdatedAt,
 	}
 }
 
 func FromUsersV1Domain(u *V1Domains.UserDomain) Users {
 	return Users{
 		UserID:        u.UserID,
-		UserName:  u.UserName,
-		Email:     u.Email,
+		UserName:  	   u.UserName,
+		Email:         u.Email,
 		UserPassword:  u.Password,
-		MobileNo:  u.MobileNo,
-		Address:   u.Address,
-		BusinessName: u.BusinessName,
-		Gender:       u.Gender,
-		Shops:        u.Shops,
-		LicenseID:    u.LicenseID,
-		Images:       u.Images,
-		CreatedAt: u.CreatedAt,
-		UpdatedAt: u.UpdatedAt,
+		MobileNo:      u.MobileNo,
+		Address:       u.Address,
+		BusinessName:  u.BusinessName,
+		Gender:        u.Gender,
+		Shops:         u.Shops,
+		LicenseID:     u.LicenseID,
+		Images:        u.Images,
+		CreatedAt:     u.CreatedAt,
+		UpdatedAt:     u.UpdatedAt,
 	}
 }
 

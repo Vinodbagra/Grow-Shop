@@ -13,19 +13,28 @@ import (
 	"github.com/snykk/grow-shop/pkg/mailer"
 )
 
-type userUsecase struct {
-	repo       V1Domains.UserRepository
-	mailer     mailer.OTPMailer
+type userservice struct {
+	repo   V1Domains.UserRepository
+	mailer mailer.OTPMailer
 }
 
-func NewUserUsecase(repo V1Domains.UserRepository, mailer mailer.OTPMailer) V1Domains.UserUsecase {
-	return &userUsecase{
-		repo:       repo,
-		mailer:     mailer,
+type Userservice interface {
+	Store(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error)
+	Login(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error)
+	SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error)
+	VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error)
+	ActivateUser(ctx context.Context, email string) (statusCode int, err error)
+	GetByEmail(ctx context.Context, email string) (outDom V1Domains.UserDomain, statusCode int, err error)
+}
+
+func NewUserservice(repo V1Domains.UserRepository, mailer mailer.OTPMailer) Userservice {
+	return &userservice{
+		repo:   repo,
+		mailer: mailer,
 	}
 }
 
-func (user *userUsecase) Store(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error) {
+func (user *userservice) Store(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error) {
 	inDom.Password, err = helpers.GenerateHash(inDom.Password)
 	if err != nil {
 		return V1Domains.UserDomain{}, http.StatusInternalServerError, err
@@ -46,7 +55,7 @@ func (user *userUsecase) Store(ctx context.Context, inDom *V1Domains.UserDomain)
 	return outDom, http.StatusCreated, nil
 }
 
-func (user *userUsecase) Login(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error) {
+func (user *userservice) Login(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error) {
 	userDomain, err := user.repo.GetByEmail(ctx, inDom)
 	if err != nil {
 		return V1Domains.UserDomain{}, http.StatusUnauthorized, errors.New("invalid email or password") // for security purpose better use generic error message
@@ -69,7 +78,7 @@ func (user *userUsecase) Login(ctx context.Context, inDom *V1Domains.UserDomain)
 	return userDomain, http.StatusOK, nil
 }
 
-func (user *userUsecase) SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error) {
+func (user *userservice) SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error) {
 	_, err = user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
 		return "", http.StatusNotFound, errors.New("email not found")
@@ -87,7 +96,7 @@ func (user *userUsecase) SendOTP(ctx context.Context, email string) (otpCode str
 	return code, http.StatusOK, nil
 }
 
-func (user *userUsecase) VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error) {
+func (user *userservice) VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error) {
 	_, err = user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
 		return http.StatusNotFound, errors.New("email not found")
@@ -100,7 +109,7 @@ func (user *userUsecase) VerifOTP(ctx context.Context, email string, userOTP str
 	return http.StatusOK, nil
 }
 
-func (u *userUsecase) ActivateUser(ctx context.Context, email string) (statusCode int, err error) {
+func (u *userservice) ActivateUser(ctx context.Context, email string) (statusCode int, err error) {
 	user, err := u.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
 		return http.StatusNotFound, errors.New("email not found")
@@ -113,7 +122,7 @@ func (u *userUsecase) ActivateUser(ctx context.Context, email string) (statusCod
 	return http.StatusOK, nil
 }
 
-func (u *userUsecase) GetByEmail(ctx context.Context, email string) (outDom V1Domains.UserDomain, statusCode int, err error) {
+func (u *userservice) GetByEmail(ctx context.Context, email string) (outDom V1Domains.UserDomain, statusCode int, err error) {
 	user, err := u.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
 		return V1Domains.UserDomain{}, http.StatusNotFound, errors.New("email not found")
