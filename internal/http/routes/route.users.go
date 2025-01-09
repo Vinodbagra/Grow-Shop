@@ -3,7 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
-	V1Usecase "github.com/snykk/grow-shop/internal/business/service/v1"
+	V1service "github.com/snykk/grow-shop/internal/business/service/v1"
 	"github.com/snykk/grow-shop/internal/datasources/caches"
 	V1PostgresRepository "github.com/snykk/grow-shop/internal/datasources/repositories/postgres/v1"
 	V1Handler "github.com/snykk/grow-shop/internal/http/handlers/v1"
@@ -19,8 +19,8 @@ type usersRoutes struct {
 
 func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.RedisCache, authMiddleware gin.HandlerFunc, mailer mailer.OTPMailer) *usersRoutes {
 	V1UserRepository := V1PostgresRepository.NewUserRepository(db)
-	V1UserUsecase := V1Usecase.NewUserUsecase(V1UserRepository, mailer)
-	V1UserHandler := V1Handler.NewUserHandler(V1UserUsecase, redisCache)
+	V1Userservice := V1service.NewUserservice(V1UserRepository, mailer)
+	V1UserHandler := V1Handler.NewUserHandler(V1Userservice, redisCache)
 
 	return &usersRoutes{V1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
 }

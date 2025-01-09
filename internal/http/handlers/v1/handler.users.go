@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	V1services "github.com/snykk/grow-shop/internal/business/service/v1"
 	"github.com/snykk/grow-shop/internal/constants"
 	"github.com/snykk/grow-shop/internal/datasources/caches"
 	"github.com/snykk/grow-shop/internal/http/datatransfers/requests"
@@ -15,14 +15,14 @@ import (
 )
 
 type UserHandler struct {
-	usecase        V1Domains.UserUsecase
-	redisCache     caches.RedisCache
+	service    V1services.Userservice
+	redisCache caches.RedisCache
 }
 
-func NewUserHandler(usecase V1Domains.UserUsecase, redisCache caches.RedisCache) UserHandler {
+func NewUserHandler(service V1services.Userservice, redisCache caches.RedisCache) UserHandler {
 	return UserHandler{
-		usecase:        usecase,
-		redisCache:     redisCache,
+		service:    service,
+		redisCache: redisCache,
 	}
 }
 
@@ -39,7 +39,7 @@ func (userH UserHandler) Regis(ctx *gin.Context) {
 	}
 
 	userDomain := UserRegisRequest.ToV1Domain()
-	userDomainn, statusCode, err := userH.usecase.Store(ctx.Request.Context(), userDomain)
+	userDomainn, statusCode, err := userH.service.Store(ctx.Request.Context(), userDomain)
 	fmt.Println(userDomain, statusCode, err)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
@@ -63,7 +63,7 @@ func (userH UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	userDomain, statusCode, err := userH.usecase.Login(ctx.Request.Context(), UserLoginRequest.ToV1Domain())
+	userDomain, statusCode, err := userH.service.Login(ctx.Request.Context(), UserLoginRequest.ToV1Domain())
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -85,7 +85,7 @@ func (userH UserHandler) SendOTP(ctx *gin.Context) {
 		return
 	}
 
-	otpCode, statusCode, err := userH.usecase.SendOTP(ctx.Request.Context(), userOTP.Email)
+	otpCode, statusCode, err := userH.service.SendOTP(ctx.Request.Context(), userOTP.Email)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -117,13 +117,13 @@ func (userH UserHandler) VerifOTP(ctx *gin.Context) {
 		return
 	}
 
-	statusCode, err := userH.usecase.VerifOTP(ctx.Request.Context(), userOTP.Email, userOTP.Code, otpRedis)
+	statusCode, err := userH.service.VerifOTP(ctx.Request.Context(), userOTP.Email, userOTP.Code, otpRedis)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
 	}
 
-	statusCode, err = userH.usecase.ActivateUser(ctx.Request.Context(), userOTP.Email)
+	statusCode, err = userH.service.ActivateUser(ctx.Request.Context(), userOTP.Email)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -139,7 +139,7 @@ func (c UserHandler) GetUserData(ctx *gin.Context) {
 	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
 
 	ctxx := ctx.Request.Context()
-	userDom, statusCode, err := c.usecase.GetByEmail(ctxx, userClaims.Email)
+	userDom, statusCode, err := c.service.GetByEmail(ctxx, userClaims.Email)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return

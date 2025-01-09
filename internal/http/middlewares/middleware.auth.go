@@ -38,6 +38,9 @@ func (m *AuthMiddleware) Handle(ctx *gin.Context) {
 		return
 	}
 
+	// TODO: validate token
+	
+
 	// user, err := m.jwtService.ParseToken(headerParts[1])
 	// if err != nil {
 	// 	V1Handler.NewAbortResponse(ctx, "invalid token")
