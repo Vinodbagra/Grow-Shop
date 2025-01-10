@@ -19,7 +19,8 @@ type usersRoutes struct {
 
 func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.RedisCache, authMiddleware gin.HandlerFunc, mailer mailer.OTPMailer) *usersRoutes {
 	V1UserRepository := V1PostgresRepository.NewUserRepository(db)
-	V1Userservice := V1service.NewUserservice(V1UserRepository, mailer)
+	V1TokenRepository := V1PostgresRepository.NewTokenRepository(db)
+	V1Userservice := V1service.NewUserservice(V1UserRepository,V1TokenRepository, mailer)
 	V1UserHandler := V1Handler.NewUserHandler(V1Userservice, redisCache)
 
 	return &usersRoutes{V1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
@@ -33,14 +34,14 @@ func (r *usersRoutes) Routes() {
 		V1AuhtRoute := V1Route.Group("/auth")
 		V1AuhtRoute.POST("/regis", r.V1Handler.Regis)
 		V1AuhtRoute.POST("/login", r.V1Handler.Login)
-		V1AuhtRoute.POST("/send-otp", r.V1Handler.SendOTP)
-		V1AuhtRoute.POST("/verif-otp", r.V1Handler.VerifOTP)
+		// V1AuhtRoute.POST("/send-otp", r.V1Handler.SendOTP)
+		// V1AuhtRoute.POST("/verif-otp", r.V1Handler.VerifOTP)
 
 		// users
 		userRoute := V1Route.Group("/users")
 		userRoute.Use(r.authMiddleware)
 		{
-			userRoute.GET("/me", r.V1Handler.GetUserData)
+			userRoute.GET("/", r.V1Handler.GetUserData)
 			// ...
 		}
 	}

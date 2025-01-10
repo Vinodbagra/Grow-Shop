@@ -3,20 +3,23 @@ package middlewares
 import (
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	"github.com/snykk/grow-shop/internal/constants"
+	V1PostgresRepository "github.com/snykk/grow-shop/internal/datasources/repositories/postgres/v1"
 	V1Handler "github.com/snykk/grow-shop/internal/http/handlers/v1"
 )
 
 type AuthMiddleware struct {
-	conn    *sqlx.DB
-	isAdmin bool
+	repo V1Domains.TokenRepository
 }
 
 func NewAuthMiddleware(conn *sqlx.DB, isAdmin bool) gin.HandlerFunc {
 	return (&AuthMiddleware{
-		conn: conn,
-		isAdmin: isAdmin,
+		repo: V1PostgresRepository.NewTokenRepository(conn),
 	}).Handle
 }
 
@@ -38,20 +41,29 @@ func (m *AuthMiddleware) Handle(ctx *gin.Context) {
 		return
 	}
 
-	// TODO: validate token
-	
+	token := headerParts[1]
+	uuidToken, err := uuid.Parse(token)
+	if err != nil {
+		V1Handler.NewAbortResponse(ctx, "token is in invalid format")
+		return
+	}
+	tokens, flag, err := m.repo.ValidateToken(ctx, uuidToken)
+	if err == constants.ErrTokenDoesNotExist {
+		V1Handler.NewAbortResponse(ctx, constants.ErrTokenDoesNotExist.Error())
+		return
+	} else if err == constants.ErrTokenExpired {
+		V1Handler.NewAbortResponse(ctx, constants.ErrTokenExpired.Error())
+		return
+	}
+	if err == constants.ErrInvalidToken {
+		V1Handler.NewAbortResponse(ctx, constants.ErrInvalidToken.Error())
+		return
+	}
 
-	// user, err := m.jwtService.ParseToken(headerParts[1])
-	// if err != nil {
-	// 	V1Handler.NewAbortResponse(ctx, "invalid token")
-	// 	return
-	// }
-
-	// if user.IsAdmin != m.isAdmin && !user.IsAdmin {
-	// 	V1Handler.NewAbortResponse(ctx, "you don't have access for this action")
-	// 	return
-	// }
-
-	// ctx.Set(constants.CtxAuthenticatedUserKey, user)
+	if !flag {
+		V1Handler.NewAbortResponse(ctx, "token is invalid")
+		return
+	}
+	ctx.Set("userID", tokens.UserID)
 	ctx.Next()
 }
