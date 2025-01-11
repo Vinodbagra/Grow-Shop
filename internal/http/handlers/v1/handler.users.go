@@ -171,3 +171,6 @@ func (c UserHandler) GetUserData(ctx *gin.Context) {
 		"user": userResponse,
 	})
 }
+
+
+// create a function for edit use data

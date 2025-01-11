@@ -43,6 +43,7 @@ func (r *usersRoutes) Routes() {
 		{
 			userRoute.GET("/", r.V1Handler.GetUserData)
 			// ...
+			// create a put api for updating user data
 		}
 	}
 

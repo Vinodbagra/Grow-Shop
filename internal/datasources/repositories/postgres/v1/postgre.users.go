@@ -2,7 +2,6 @@ package v1
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
@@ -24,7 +23,6 @@ func NewUserRepository(conn *sqlx.DB) V1Domains.UserRepository {
 
 func (r *postgreUserRepository) Store(ctx context.Context, inDom *V1Domains.UserDomain) (err error) {
 	userRecord := records.FromUsersV1Domain(inDom)
-	fmt.Println("Vinod")
 	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO users(user_id,user_name, email, password, created_at) VALUES (uuid_generate_v4(), :user_name, :email, :password, :created_at)`, userRecord)
 	if err != nil {
 		return err
@@ -68,3 +66,7 @@ func (r *postgreUserRepository) GetUserByID(ctx context.Context, inDom *V1Domain
 
 	return userRecord.ToV1Domain(), nil
 }
+
+
+// TODO
+// create a function to update user data

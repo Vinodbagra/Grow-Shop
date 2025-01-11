@@ -142,3 +142,6 @@ func (u *userservice) GetUserByID(ctx context.Context, userID uuid.UUID) (outDom
 
 	return user, http.StatusOK, nil
 }
+
+
+// create a function to update user data
