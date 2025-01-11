@@ -19,7 +19,7 @@ func (user UserRequest) ToV1Domain() *V1Domains.UserDomain {
 }
 
 // Send OTP Request
-type UserSendOTPRequest struct {
+type UserForgotPasswordRequest struct {
 	Email string `json:"email" validate:"required,email"`
 }
 

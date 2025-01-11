@@ -20,7 +20,7 @@ type usersRoutes struct {
 func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.RedisCache, authMiddleware gin.HandlerFunc, mailer mailer.OTPMailer) *usersRoutes {
 	V1UserRepository := V1PostgresRepository.NewUserRepository(db)
 	V1TokenRepository := V1PostgresRepository.NewTokenRepository(db)
-	V1Userservice := V1service.NewUserservice(V1UserRepository,V1TokenRepository, mailer)
+	V1Userservice := V1service.NewUserservice(V1UserRepository, V1TokenRepository, mailer, redisCache)
 	V1UserHandler := V1Handler.NewUserHandler(V1Userservice, redisCache)
 
 	return &usersRoutes{V1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
@@ -30,12 +30,10 @@ func (r *usersRoutes) Routes() {
 	// Routes V1
 	V1Route := r.router.Group("/v1")
 	{
-		// auth
-		V1AuhtRoute := V1Route.Group("/auth")
-		V1AuhtRoute.POST("/regis", r.V1Handler.Regis)
-		V1AuhtRoute.POST("/login", r.V1Handler.Login)
-		// V1AuhtRoute.POST("/send-otp", r.V1Handler.SendOTP)
-		// V1AuhtRoute.POST("/verif-otp", r.V1Handler.VerifOTP)
+		V1Route.POST("/register", r.V1Handler.Regis)
+		V1Route.POST("/login", r.V1Handler.Login)
+		V1Route.POST("/forgot-password", r.V1Handler.ForgotPassword)
+		V1Route.POST("/reset-password", r.V1Handler.VerifOTP)
 
 		// users
 		userRoute := V1Route.Group("/users")

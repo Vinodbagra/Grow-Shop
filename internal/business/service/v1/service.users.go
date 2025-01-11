@@ -11,32 +11,35 @@ import (
 	"github.com/sirupsen/logrus"
 	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
 	"github.com/snykk/grow-shop/internal/constants"
+	"github.com/snykk/grow-shop/internal/datasources/caches"
 	"github.com/snykk/grow-shop/pkg/helpers"
 	"github.com/snykk/grow-shop/pkg/logger"
 	"github.com/snykk/grow-shop/pkg/mailer"
 )
 
 type userservice struct {
-	repo      V1Domains.UserRepository
-	repoToken V1Domains.TokenRepository
-	mailer    mailer.OTPMailer
+	repo       V1Domains.UserRepository
+	repoToken  V1Domains.TokenRepository
+	mailer     mailer.OTPMailer
+	redisCache caches.RedisCache
 }
 
 type Userservice interface {
 	Store(ctx context.Context, inDom *V1Domains.UserDomain) (outDom V1Domains.UserDomain, statusCode int, err error)
 	Login(ctx context.Context, inDom *V1Domains.UserDomain) (token uuid.UUID, statusCode int, err error)
-	SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error)
+	ForgotPassword(ctx context.Context, email string) (statusCode int, err error)
 	VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error)
 	ActivateUser(ctx context.Context, email string) (statusCode int, err error)
 	GetByEmail(ctx context.Context, email string) (outDom V1Domains.UserDomain, statusCode int, err error)
 	GetUserByID(ctx context.Context, userID uuid.UUID) (outDom V1Domains.UserDomain, statusCode int, err error)
 }
 
-func NewUserservice(repo V1Domains.UserRepository, repoToken V1Domains.TokenRepository, mailer mailer.OTPMailer) Userservice {
+func NewUserservice(repo V1Domains.UserRepository, repoToken V1Domains.TokenRepository, mailer mailer.OTPMailer, redisCache caches.RedisCache) Userservice {
 	return &userservice{
-		repo:   repo,
+		repo:      repo,
 		repoToken: repoToken,
-		mailer: mailer,
+		mailer:    mailer,
+		redisCache: redisCache,
 	}
 }
 
@@ -81,22 +84,21 @@ func (user *userservice) Login(ctx context.Context, inDom *V1Domains.UserDomain)
 	return token, http.StatusOK, nil
 }
 
-func (user *userservice) SendOTP(ctx context.Context, email string) (otpCode string, statusCode int, err error) {
-	_, err = user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
+func (user *userservice) ForgotPassword(ctx context.Context, email string) (statusCode int, err error) {
+	userData, err := user.repo.GetByEmail(ctx, &V1Domains.UserDomain{Email: email})
 	if err != nil {
-		return "", http.StatusNotFound, errors.New("email not found")
+		return http.StatusNotFound, errors.New("email not found")
 	}
 
-	code, err := helpers.GenerateOTPCode(6)
-	if err != nil {
-		return "", http.StatusInternalServerError, err
+	resetToken := uuid.NewString()
+	otpKey := fmt.Sprintf("user_reset_token:%s", userData.Email)
+	go user.redisCache.Set(otpKey, resetToken)
+	resetLink := fmt.Sprintf("%s?reset-token=%s", constants.ResetFrontEndURL, resetToken)
+	if err = user.mailer.ForgotPassword(resetLink, email); err != nil {
+		return http.StatusInternalServerError, err
 	}
 
-	if err = user.mailer.SendOTP(code, email); err != nil {
-		return "", http.StatusInternalServerError, err
-	}
-
-	return code, http.StatusOK, nil
+	return http.StatusOK, nil
 }
 
 func (user *userservice) VerifOTP(ctx context.Context, email string, userOTP string, otpRedis string) (statusCode int, err error) {
@@ -142,6 +144,5 @@ func (u *userservice) GetUserByID(ctx context.Context, userID uuid.UUID) (outDom
 
 	return user, http.StatusOK, nil
 }
-
 
 // create a function to update user data

@@ -20,8 +20,8 @@ type Config struct {
 	JWTExpired int    `mapstructure:"JWT_EXPIRED"`
 	JWTIssuer  string `mapstructure:"JWT_ISSUER"`
 
-	OTPEmail    string `mapstructure:"OTP_EMAIL"`
-	OTPPassword string `mapstructure:"OTP_PASSWORD"`
+	OTPEmail    string `mapstructure:"EMAIL"`
+	OTPPassword string `mapstructure:"EMAIL_PASSWORD"`
 
 	REDISHost     string `mapstructure:"REDIS_HOST"`
 	REDISPassword string `mapstructure:"REDIS_PASS"`

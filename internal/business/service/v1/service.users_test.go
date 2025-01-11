@@ -166,13 +166,13 @@ package v1_test
 // 	})
 // }
 
-// func TestSendOTP(t *testing.T) {
+// func TestForgotPassword(t *testing.T) {
 // 	setup(t)
 // 	t.Run("Test 1 | Success Send OTP", func(t *testing.T) {
 // 		userRepoMock.Mock.On("GetByEmail", mock.Anything, mock.AnythingOfType("*v1.UserDomain")).Return(userDataFromDB, nil).Once()
-// 		mailerOTPMock.On("SendOTP", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
+// 		mailerOTPMock.On("ForgotPassword", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
 
-// 		otpCode, statusCode, err := userservice.SendOTP(context.Background(), "najibfikri13@gmail.com")
+// 		otpCode, statusCode, err := userservice.ForgotPassword(context.Background(), "najibfikri13@gmail.com")
 
 // 		assert.Nil(t, err)
 // 		assert.NotEqual(t, "", otpCode)
@@ -182,7 +182,7 @@ package v1_test
 // 	t.Run("Test 2 | Email Not Registered", func(t *testing.T) {
 // 		userRepoMock.Mock.On("GetByEmail", mock.Anything, mock.AnythingOfType("*v1.UserDomain")).Return(V1Domains.UserDomain{}, constants.ErrUserNotFound).Once()
 
-// 		otpCode, statusCode, err := userservice.SendOTP(context.Background(), "najibfikri13@gmail.com")
+// 		otpCode, statusCode, err := userservice.ForgotPassword(context.Background(), "najibfikri13@gmail.com")
 
 // 		assert.NotNil(t, err)
 // 		assert.Equal(t, "", otpCode)
@@ -190,9 +190,9 @@ package v1_test
 // 	})
 // 	t.Run("Test 3 | Failure When Send OTP", func(t *testing.T) {
 // 		userRepoMock.Mock.On("GetByEmail", mock.Anything, mock.AnythingOfType("*v1.UserDomain")).Return(userDataFromDB, nil).Once()
-// 		mailerOTPMock.On("SendOTP", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(constants.ErrUnexpected).Once()
+// 		mailerOTPMock.On("ForgotPassword", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(constants.ErrUnexpected).Once()
 
-// 		otpCode, statusCode, err := userservice.SendOTP(context.Background(), "najibfikri13@gmail.com")
+// 		otpCode, statusCode, err := userservice.ForgotPassword(context.Background(), "najibfikri13@gmail.com")
 
 // 		assert.NotNil(t, err)
 // 		assert.Equal(t, "", otpCode)

@@ -56,8 +56,8 @@ PostgreSQL
 
 ##### OTP
 
--   `OTP_EMAIL`: The email address to send OTP codes to (defaults to "patrick@gmail.com")
--   `OTP_PASSWORD`: The password to use for sending OTP codes (defaults to "idonthavepassword")
+-   `EMAIL`: The email address to send OTP codes to (defaults to "patrick@gmail.com")
+-   `EMAIL_PASSWORD`: The password to use for sending OTP codes (defaults to "idonthavepassword")
 
 ##### Cache
 
