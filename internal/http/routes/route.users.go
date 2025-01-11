@@ -30,10 +30,10 @@ func (r *usersRoutes) Routes() {
 	// Routes V1
 	V1Route := r.router.Group("/v1")
 	{
-		V1Route.POST("/register", r.V1Handler.Regis)
+		V1Route.POST("/register", r.V1Handler.Register)
 		V1Route.POST("/login", r.V1Handler.Login)
 		V1Route.POST("/forgot-password", r.V1Handler.ForgotPassword)
-		V1Route.POST("/reset-password", r.V1Handler.VerifOTP)
+		V1Route.POST("/reset-password", r.V1Handler.ResetPassword)
 
 		// users
 		userRoute := V1Route.Group("/users")

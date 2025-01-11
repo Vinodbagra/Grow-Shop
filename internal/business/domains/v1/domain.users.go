@@ -27,6 +27,6 @@ type UserDomain struct {
 type UserRepository interface {
 	Store(ctx context.Context, inDom *UserDomain) (err error)
 	GetByEmail(ctx context.Context, inDom *UserDomain) (outDomain UserDomain, err error)
-	ChangeActiveUser(ctx context.Context, inDom *UserDomain) (err error)
+	UpdatePassword(ctx context.Context, inDom *UserDomain) (err error)
 	GetUserByID(ctx context.Context, inDom *UserDomain) (outDomain UserDomain, err error)
 }

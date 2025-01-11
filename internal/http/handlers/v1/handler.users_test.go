@@ -220,12 +220,12 @@ package v1_test
 // 	})
 // }
 
-// func TestVerifOTP(t *testing.T) {
+// func TestResetPassword(t *testing.T) {
 // 	setup(t)
 // 	// Define route
-// 	s.POST(constants.EndpointV1+"/auth/verif-otp", userHandler.VerifOTP)
+// 	s.POST(constants.EndpointV1+"/auth/verif-otp", userHandler.ResetPassword)
 // 	t.Run("Test 1 | Success Verify OTP", func(t *testing.T) {
-// 		req := requests.UserVerifOTPRequest{
+// 		req := requests.UserResetPasswordRequest{
 // 			Email: "najibfikri13@gmail.com",
 // 			Code:  "112233",
 // 		}
@@ -256,7 +256,7 @@ package v1_test
 // 		assert.Contains(t, body, "otp verification success")
 // 	})
 // 	t.Run("Test 2 | Payloads is Empty", func(t *testing.T) {
-// 		req := requests.UserVerifOTPRequest{}
+// 		req := requests.UserResetPasswordRequest{}
 // 		reqBody, _ := json.Marshal(req)
 
 // 		w := httptest.NewRecorder()
@@ -273,7 +273,7 @@ package v1_test
 // 		assert.Contains(t, w.Result().Header.Get("Content-Type"), "application/json")
 // 	})
 // 	t.Run("Test 1 | Invalid OTP Code", func(t *testing.T) {
-// 		req := requests.UserVerifOTPRequest{
+// 		req := requests.UserResetPasswordRequest{
 // 			Email: "najibfikri13@gmail.com",
 // 			Code:  "999999",
 // 		}
