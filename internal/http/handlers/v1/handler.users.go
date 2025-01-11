@@ -5,24 +5,26 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
+	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
+	V1services "github.com/snykk/grow-shop/internal/business/service/v1"
 	"github.com/snykk/grow-shop/internal/constants"
 	"github.com/snykk/grow-shop/internal/datasources/caches"
 	"github.com/snykk/grow-shop/internal/http/datatransfers/requests"
 	"github.com/snykk/grow-shop/internal/http/datatransfers/responses"
-	"github.com/snykk/grow-shop/pkg/jwt"
+	"github.com/snykk/grow-shop/pkg/logger"
 	"github.com/snykk/grow-shop/pkg/validators"
 )
 
 type UserHandler struct {
-	usecase        V1Domains.UserUsecase
-	redisCache     caches.RedisCache
+	service    V1services.Userservice
+	redisCache caches.RedisCache
 }
 
-func NewUserHandler(usecase V1Domains.UserUsecase, redisCache caches.RedisCache) UserHandler {
+func NewUserHandler(service V1services.Userservice, redisCache caches.RedisCache) UserHandler {
 	return UserHandler{
-		usecase:        usecase,
-		redisCache:     redisCache,
+		service:    service,
+		redisCache: redisCache,
 	}
 }
 
@@ -39,7 +41,7 @@ func (userH UserHandler) Regis(ctx *gin.Context) {
 	}
 
 	userDomain := UserRegisRequest.ToV1Domain()
-	userDomainn, statusCode, err := userH.usecase.Store(ctx.Request.Context(), userDomain)
+	userDomainn, statusCode, err := userH.service.Store(ctx.Request.Context(), userDomain)
 	fmt.Println(userDomain, statusCode, err)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
@@ -52,6 +54,8 @@ func (userH UserHandler) Regis(ctx *gin.Context) {
 }
 
 func (userH UserHandler) Login(ctx *gin.Context) {
+	methodName := "Handler.Login"
+	logger.InfoF("function name %s recieved the request to login", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, methodName)
 	var UserLoginRequest requests.UserLoginRequest
 	if err := ctx.ShouldBindJSON(&UserLoginRequest); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
@@ -63,13 +67,15 @@ func (userH UserHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	userDomain, statusCode, err := userH.usecase.Login(ctx.Request.Context(), UserLoginRequest.ToV1Domain())
+	token, statusCode, err := userH.service.Login(ctx.Request.Context(), UserLoginRequest.ToV1Domain())
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
 	}
 
-	NewSuccessResponse(ctx, statusCode, "login success", responses.FromV1Domain(userDomain))
+	NewSuccessResponse(ctx, statusCode, "login success", map[string]interface{}{
+		"token": token,
+	})
 }
 
 func (userH UserHandler) SendOTP(ctx *gin.Context) {
@@ -85,7 +91,7 @@ func (userH UserHandler) SendOTP(ctx *gin.Context) {
 		return
 	}
 
-	otpCode, statusCode, err := userH.usecase.SendOTP(ctx.Request.Context(), userOTP.Email)
+	otpCode, statusCode, err := userH.service.SendOTP(ctx.Request.Context(), userOTP.Email)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -117,13 +123,13 @@ func (userH UserHandler) VerifOTP(ctx *gin.Context) {
 		return
 	}
 
-	statusCode, err := userH.usecase.VerifOTP(ctx.Request.Context(), userOTP.Email, userOTP.Code, otpRedis)
+	statusCode, err := userH.service.VerifOTP(ctx.Request.Context(), userOTP.Email, userOTP.Code, otpRedis)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
 	}
 
-	statusCode, err = userH.usecase.ActivateUser(ctx.Request.Context(), userOTP.Email)
+	statusCode, err = userH.service.ActivateUser(ctx.Request.Context(), userOTP.Email)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
@@ -135,20 +141,36 @@ func (userH UserHandler) VerifOTP(ctx *gin.Context) {
 }
 
 func (c UserHandler) GetUserData(ctx *gin.Context) {
-	// get authenticated user from context
-	userClaims := ctx.MustGet(constants.CtxAuthenticatedUserKey).(jwt.JwtCustomClaim)
+	// Get userID from the context
+	userID, exists := ctx.Get("userID")
+	if !exists {
+		NewErrorResponse(ctx, http.StatusUnauthorized, "user ID not found in context")
+		return
+	}
 
+	// Convert userID to the expected type
+	userUUID, ok := userID.(uuid.UUID)
+	if !ok {
+		NewErrorResponse(ctx, http.StatusInternalServerError, "invalid user ID format")
+		return
+	}
+
+	// Call the service to fetch user data by userID
 	ctxx := ctx.Request.Context()
-	userDom, statusCode, err := c.usecase.GetByEmail(ctxx, userClaims.Email)
+	userDom, statusCode, err := c.service.GetUserByID(ctxx, userUUID)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
 	}
 
+	// Transform user domain data to a response format
 	userResponse := responses.FromV1Domain(userDom)
 
+	// Send success response
 	NewSuccessResponse(ctx, statusCode, "user data fetched successfully", map[string]interface{}{
 		"user": userResponse,
 	})
-
 }
+
+
+// create a function for edit use data
