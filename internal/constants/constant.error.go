@@ -16,4 +16,6 @@ var (
 	ErrTokenExpired = errors.New("token expired")
 	ErrInvalidToken = errors.New("invalid token")
 	ErrTokenDoesNotExist = errors.New("token does not exist")
+	ErrDatabaseUpdate = errors.New("failed to update database")
+	ErrInvalidResetToken = errors.New("invalid reset token")
 )

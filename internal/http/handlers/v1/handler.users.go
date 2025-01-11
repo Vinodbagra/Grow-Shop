@@ -28,7 +28,7 @@ func NewUserHandler(service V1services.Userservice, redisCache caches.RedisCache
 	}
 }
 
-func (userH UserHandler) Regis(ctx *gin.Context) {
+func (userH UserHandler) Register(ctx *gin.Context) {
 	var UserRegisRequest requests.UserRequest
 	if err := ctx.ShouldBindJSON(&UserRegisRequest); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
@@ -78,66 +78,49 @@ func (userH UserHandler) Login(ctx *gin.Context) {
 	})
 }
 
-func (userH UserHandler) SendOTP(ctx *gin.Context) {
-	var userOTP requests.UserSendOTPRequest
+func (userH UserHandler) ForgotPassword(ctx *gin.Context) {
+	var userForgotPasswordRequest requests.UserForgotPasswordRequest
 
-	if err := ctx.ShouldBindJSON(&userOTP); err != nil {
+	if err := ctx.ShouldBindJSON(&userForgotPasswordRequest); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	if err := validators.ValidatePayloads(userOTP); err != nil {
+	if err := validators.ValidatePayloads(userForgotPasswordRequest); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	otpCode, statusCode, err := userH.service.SendOTP(ctx.Request.Context(), userOTP.Email)
+	statusCode, err := userH.service.ForgotPassword(ctx.Request.Context(), userForgotPasswordRequest.Email)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
 	}
 
-	otpKey := fmt.Sprintf("user_otp:%s", userOTP.Email)
-	go userH.redisCache.Set(otpKey, otpCode)
-
-	NewSuccessResponse(ctx, statusCode, fmt.Sprintf("otp code has been send to %s", userOTP.Email), nil)
+	NewSuccessResponse(ctx, statusCode, fmt.Sprintf("reset link has been send to your email: %s", userForgotPasswordRequest.Email), nil)
 }
 
-func (userH UserHandler) VerifOTP(ctx *gin.Context) {
-	var userOTP requests.UserVerifOTPRequest
+func (userH UserHandler) ResetPassword(ctx *gin.Context) {
+	var userResetPasswordRequest requests.UserResetPasswordRequest
 
-	if err := ctx.ShouldBindJSON(&userOTP); err != nil {
+	if err := ctx.ShouldBindJSON(& userResetPasswordRequest); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	if err := validators.ValidatePayloads(userOTP); err != nil {
+	if err := validators.ValidatePayloads( userResetPasswordRequest); err != nil {
 		NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
 		return
 	}
 
-	otpKey := fmt.Sprintf("user_otp:%s", userOTP.Email)
-	otpRedis, err := userH.redisCache.Get(otpKey)
-	if err != nil {
-		NewErrorResponse(ctx, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	statusCode, err := userH.service.VerifOTP(ctx.Request.Context(), userOTP.Email, userOTP.Code, otpRedis)
+	userDomain := userResetPasswordRequest.ToV1Domain()
+	statusCode, err := userH.service.ResetPassword(ctx.Request.Context(), userDomain,  userResetPasswordRequest.ResetToken)
 	if err != nil {
 		NewErrorResponse(ctx, statusCode, err.Error())
 		return
 	}
 
-	statusCode, err = userH.service.ActivateUser(ctx.Request.Context(), userOTP.Email)
-	if err != nil {
-		NewErrorResponse(ctx, statusCode, err.Error())
-		return
-	}
-
-	go userH.redisCache.Del(otpKey)
-
-	NewSuccessResponse(ctx, statusCode, "otp verification success", nil)
+	NewSuccessResponse(ctx, statusCode, "password reset success", nil)
 }
 
 func (c UserHandler) GetUserData(ctx *gin.Context) {
@@ -171,6 +154,5 @@ func (c UserHandler) GetUserData(ctx *gin.Context) {
 		"user": userResponse,
 	})
 }
-
 
 // create a function for edit use data

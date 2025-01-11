@@ -19,14 +19,22 @@ func (user UserRequest) ToV1Domain() *V1Domains.UserDomain {
 }
 
 // Send OTP Request
-type UserSendOTPRequest struct {
+type UserForgotPasswordRequest struct {
 	Email string `json:"email" validate:"required,email"`
 }
 
 // Verify OTP Code
-type UserVerifOTPRequest struct {
+type UserResetPasswordRequest struct {
 	Email string `json:"email" validate:"required,email"`
-	Code  string `json:"code" validate:"required,numeric"`
+	Password string `json:"password" validate:"required,min=8,containsany=!@#$%^&*()?"`
+	ResetToken  string `json:"reset_token" validate:"required"`
+}
+
+func (user UserResetPasswordRequest) ToV1Domain() *V1Domains.UserDomain {
+	return &V1Domains.UserDomain{
+		Email:    user.Email,
+		Password: user.Password,
+	}
 }
 
 // Login Request

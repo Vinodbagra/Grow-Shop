@@ -149,18 +149,18 @@ package v1_test
 // 	})
 // }
 
-// func TestSendOTP(t *testing.T) {
+// func TestForgotPassword(t *testing.T) {
 // 	setup(t)
 // 	// Define route
-// 	s.POST(constants.EndpointV1+"/auth/send-otp", userHandler.SendOTP)
+// 	s.POST(constants.EndpointV1+"/auth/send-otp", userHandler.ForgotPassword)
 // 	t.Run("Test 1 | Success Send OTP", func(t *testing.T) {
-// 		req := requests.UserSendOTPRequest{
+// 		req := requests.UserForgotPasswordRequest{
 // 			Email: "najibfikri13@gmail.com",
 // 		}
 // 		reqBody, _ := json.Marshal(req)
 
 // 		userRepoMock.Mock.On("GetByEmail", mock.Anything, mock.AnythingOfType("*v1.UserDomain")).Return(userDataFromDB, nil).Once()
-// 		mailerOTPMock.On("SendOTP", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
+// 		mailerOTPMock.On("ForgotPassword", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil).Once()
 // 		redisMock.On("Set", mock.AnythingOfType("string"), mock.Anything).Return(nil).Once()
 
 // 		w := httptest.NewRecorder()
@@ -180,7 +180,7 @@ package v1_test
 // 		assert.Contains(t, body, "otp code has been send")
 // 	})
 // 	t.Run("Test 3 | Payloads is Empty", func(t *testing.T) {
-// 		req := requests.UserSendOTPRequest{}
+// 		req := requests.UserForgotPasswordRequest{}
 // 		reqBody, _ := json.Marshal(req)
 
 // 		w := httptest.NewRecorder()
@@ -197,13 +197,13 @@ package v1_test
 // 		assert.Contains(t, w.Result().Header.Get("Content-Type"), "application/json")
 // 	})
 // 	t.Run("Test 3 | When Failure Send OTP", func(t *testing.T) {
-// 		req := requests.UserSendOTPRequest{
+// 		req := requests.UserForgotPasswordRequest{
 // 			Email: "najibfikri13@gmail.com",
 // 		}
 // 		reqBody, _ := json.Marshal(req)
 
 // 		userRepoMock.Mock.On("GetByEmail", mock.Anything, mock.AnythingOfType("*v1.UserDomain")).Return(userDataFromDB, nil).Once()
-// 		mailerOTPMock.On("SendOTP", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(constants.ErrUnexpected).Once()
+// 		mailerOTPMock.On("ForgotPassword", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(constants.ErrUnexpected).Once()
 
 // 		w := httptest.NewRecorder()
 // 		r := httptest.NewRequest(http.MethodPost, constants.EndpointV1+"/auth/send-otp", bytes.NewReader(reqBody))
@@ -220,12 +220,12 @@ package v1_test
 // 	})
 // }
 
-// func TestVerifOTP(t *testing.T) {
+// func TestResetPassword(t *testing.T) {
 // 	setup(t)
 // 	// Define route
-// 	s.POST(constants.EndpointV1+"/auth/verif-otp", userHandler.VerifOTP)
+// 	s.POST(constants.EndpointV1+"/auth/verif-otp", userHandler.ResetPassword)
 // 	t.Run("Test 1 | Success Verify OTP", func(t *testing.T) {
-// 		req := requests.UserVerifOTPRequest{
+// 		req := requests.UserResetPasswordRequest{
 // 			Email: "najibfikri13@gmail.com",
 // 			Code:  "112233",
 // 		}
@@ -256,7 +256,7 @@ package v1_test
 // 		assert.Contains(t, body, "otp verification success")
 // 	})
 // 	t.Run("Test 2 | Payloads is Empty", func(t *testing.T) {
-// 		req := requests.UserVerifOTPRequest{}
+// 		req := requests.UserResetPasswordRequest{}
 // 		reqBody, _ := json.Marshal(req)
 
 // 		w := httptest.NewRecorder()
@@ -273,7 +273,7 @@ package v1_test
 // 		assert.Contains(t, w.Result().Header.Get("Content-Type"), "application/json")
 // 	})
 // 	t.Run("Test 1 | Invalid OTP Code", func(t *testing.T) {
-// 		req := requests.UserVerifOTPRequest{
+// 		req := requests.UserResetPasswordRequest{
 // 			Email: "najibfikri13@gmail.com",
 // 			Code:  "999999",
 // 		}

@@ -9,8 +9,8 @@ type OTPMailer struct {
 	mock.Mock
 }
 
-// SendOTP provides a mock function with given fields: otpCode, receiver
-func (_m *OTPMailer) SendOTP(otpCode string, receiver string) error {
+// ForgotPassword provides a mock function with given fields: otpCode, receiver
+func (_m *OTPMailer) ForgotPassword(otpCode string, receiver string) error {
 	ret := _m.Called(otpCode, receiver)
 
 	var r0 error

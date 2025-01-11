@@ -45,12 +45,16 @@ func (r *postgreUserRepository) GetByEmail(ctx context.Context, inDom *V1Domains
 	return userRecord.ToV1Domain(), nil
 }
 
-func (r *postgreUserRepository) ChangeActiveUser(ctx context.Context, inDom *V1Domains.UserDomain) (err error) {
+func (r *postgreUserRepository) UpdatePassword(ctx context.Context, inDom *V1Domains.UserDomain) (err error) {
 	userRecord := records.FromUsersV1Domain(inDom)
 
-	_, err = r.conn.NamedQueryContext(ctx, `UPDATE users SET active = :active WHERE id = :id`, userRecord)
+	_, err = r.conn.NamedQueryContext(ctx, `UPDATE users SET password = :password WHERE email = :email`, userRecord)
+	if err != nil {
+		logger.ErrorF("error when updating user password: %v", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, err)
+		return constants.ErrDatabaseUpdate
+	}
 
-	return
+	return nil
 }
 
 func (r *postgreUserRepository) GetUserByID(ctx context.Context, inDom *V1Domains.UserDomain) (outDomain V1Domains.UserDomain, err error) {
