@@ -29,4 +29,5 @@ type UserRepository interface {
 	GetByEmail(ctx context.Context, inDom *UserDomain) (outDomain UserDomain, err error)
 	UpdatePassword(ctx context.Context, inDom *UserDomain) (err error)
 	GetUserByID(ctx context.Context, inDom *UserDomain) (outDomain UserDomain, err error)
+	UpdateUserData(ctx context.Context, inDom *UserDomain) (err error) 
 }
