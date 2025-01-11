@@ -40,6 +40,7 @@ func (r *usersRoutes) Routes() {
 		userRoute.Use(r.authMiddleware)
 		{
 			userRoute.GET("/", r.V1Handler.GetUserData)
+			userRoute.PUT(":id", r.V1Handler.UpdateUserData)
 			// ...
 			// create a put api for updating user data
 		}

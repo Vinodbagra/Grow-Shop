@@ -74,3 +74,16 @@ func (r *postgreUserRepository) GetUserByID(ctx context.Context, inDom *V1Domain
 
 // TODO
 // create a function to update user data
+func (r *postgreUserRepository) UpdateUserData(ctx context.Context, userData *V1Domains.UserDomain) (err error) {
+	methodName := "postgreUserRepository.UpdateUserData"
+	logger.InfoF("function name %s recieved the request to update user data", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, methodName)
+	userRecord := records.FromUsersV1Domain(userData)
+
+	_, err = r.conn.NamedQueryContext(ctx, `UPDATE users SET mobile_no = :mobile_no, address = :address, business_name = :business_name, gender = :gender WHERE user_id = :user_id`, userRecord)
+	if err != nil {
+		logger.ErrorF("error when updating user password: %v", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, err)
+		return constants.ErrDatabaseUpdate
+	}
+	logger.InfoF("function name %s successfully updated user data", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, methodName)
+	return nil
+}

@@ -31,6 +31,7 @@ type Userservice interface {
 	ResetPassword(ctx context.Context, inDom *V1Domains.UserDomain, resetToken string) (statusCode int, err error)
 	GetByEmail(ctx context.Context, email string) (outDom V1Domains.UserDomain, statusCode int, err error)
 	GetUserByID(ctx context.Context, userID uuid.UUID) (outDom V1Domains.UserDomain, statusCode int, err error)
+	UpdateUserData(ctx context.Context,  userData *V1Domains.UserDomain) (statusCode int, err error)
 }
 
 func NewUserservice(repo V1Domains.UserRepository, repoToken V1Domains.TokenRepository, mailer mailer.OTPMailer, redisCache caches.RedisCache) Userservice {
@@ -141,3 +142,11 @@ func (u *userservice) GetUserByID(ctx context.Context, userID uuid.UUID) (outDom
 }
 
 // create a function to update user data
+func (u *userservice) UpdateUserData(ctx context.Context,  userData *V1Domains.UserDomain) (statusCode int, err error) {
+	err = u.repo.UpdateUserData(ctx, userData)
+	if err != nil {
+		logger.ErrorF("failed to update user data", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, err)
+		return http.StatusInternalServerError, err
+	}
+	return http.StatusOK, nil
+}

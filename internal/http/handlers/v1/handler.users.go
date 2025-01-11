@@ -156,3 +156,40 @@ func (c UserHandler) GetUserData(ctx *gin.Context) {
 }
 
 // create a function for edit use data
+func (userH UserHandler) UpdateUserData(ctx *gin.Context) {
+    var UserUpdateRequest requests.UpdateUserRequest
+    if err := ctx.ShouldBindJSON(&UserUpdateRequest); err != nil {
+        NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+        return
+    }
+
+    if err := validators.ValidatePayloads(UserUpdateRequest); err != nil {
+        NewErrorResponse(ctx, http.StatusBadRequest, err.Error())
+        return
+    }
+
+    userDomain := UserUpdateRequest.ToV1Domain()
+
+    // Extract user ID from the URL parameter or request context (adjust based on your setup)
+    userID := ctx.Param("id")
+    if userID == "" {
+        NewErrorResponse(ctx, http.StatusBadRequest, "user ID is required")
+        return
+    }
+
+    uuidUserID, err := uuid.Parse(userID)
+    if err != nil {
+        NewErrorResponse(ctx, http.StatusBadRequest, "invalid user ID format")
+        return
+    }
+
+    userDomain.UserID = uuidUserID
+
+    statusCode, err := userH.service.UpdateUserData(ctx.Request.Context(), userDomain)
+    if err != nil {
+        NewErrorResponse(ctx, statusCode, err.Error())
+        return
+    }
+
+    NewSuccessResponse(ctx, statusCode, "user updated successfully", nil)
+}
