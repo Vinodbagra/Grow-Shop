@@ -7,19 +7,18 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
-	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
 	"github.com/snykk/grow-shop/internal/constants"
-	V1PostgresRepository "github.com/snykk/grow-shop/internal/datasources/repositories/postgres/v1"
+	V1Repository "github.com/snykk/grow-shop/internal/datasources/repositories/postgres/v1"
 	V1Handler "github.com/snykk/grow-shop/internal/http/handlers/v1"
 )
 
 type AuthMiddleware struct {
-	repo V1Domains.TokenRepository
+	repo V1Repository.TokenRepository
 }
 
 func NewAuthMiddleware(conn *sqlx.DB, isAdmin bool) gin.HandlerFunc {
 	return (&AuthMiddleware{
-		repo: V1PostgresRepository.NewTokenRepository(conn),
+		repo: V1Repository.NewTokenRepository(conn),
 	}).Handle
 }
 
