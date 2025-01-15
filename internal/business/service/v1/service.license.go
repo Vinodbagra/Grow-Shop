@@ -16,7 +16,7 @@ type licenseservice struct {
 }
 
 type LicenseService interface {
-	UpdateLicense(ctx context.Context, licenseData V1Domains.LicenseDomain) (statusCode int, err error)
+	UpdateLicense(ctx context.Context, licenseData *V1Domains.LicenseDomain) (statusCode int, err error)
 }
 
 func NewLicenseservice(licenseRepo V1Repository.LicenseRepository) LicenseService {
@@ -25,11 +25,11 @@ func NewLicenseservice(licenseRepo V1Repository.LicenseRepository) LicenseServic
 	}
 }
 
-func (license *licenseservice) UpdateLicense(ctx context.Context, licenseData V1Domains.LicenseDomain) (statusCode int, err error) {
+func (license *licenseservice) UpdateLicense(ctx context.Context, licenseData *V1Domains.LicenseDomain) (statusCode int, err error) {
 	methodName := "licenseService.UpdateLicense"
 	logger.InfoF("function name %s recieved the request to update license", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, methodName)
 
-	// licenseID, err := license.licenseRepo.UpdateLicense(ctx, licenseData)
+	err = license.licenseRepo.UpdateLicenseData(ctx, licenseData)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}

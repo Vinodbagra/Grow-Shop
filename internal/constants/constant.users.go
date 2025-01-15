@@ -1,5 +1,7 @@
 package constants
 
+import "errors"
+
 const (
 	CtxAuthenticatedUserKey = "CtxAuthenticatedUserKey"
 	AdminID                 = 1
@@ -7,5 +9,6 @@ const (
 )
 
 var (
-	ListGender = []string{"male", "female"}
+	ListGender             = []string{"male", "female"}
+	ErrInvalidUUIDFormat = errors.New("invalid  uuid format")
 )
