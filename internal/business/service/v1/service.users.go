@@ -12,6 +12,7 @@ import (
 	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
 	"github.com/snykk/grow-shop/internal/constants"
 	"github.com/snykk/grow-shop/internal/datasources/caches"
+	V1Repository "github.com/snykk/grow-shop/internal/datasources/repositories/postgres/v1"
 	"github.com/snykk/grow-shop/pkg/helpers"
 	"github.com/snykk/grow-shop/pkg/logger"
 	"github.com/snykk/grow-shop/pkg/mailer"
@@ -19,7 +20,8 @@ import (
 
 type userservice struct {
 	repo       V1Domains.UserRepository
-	repoToken  V1Domains.TokenRepository
+	repoToken  V1Repository.TokenRepository
+	licenseRepo V1Repository.LicenseRepository
 	mailer     mailer.OTPMailer
 	redisCache caches.RedisCache
 }
@@ -34,10 +36,11 @@ type Userservice interface {
 	UpdateUserData(ctx context.Context,  userData *V1Domains.UserDomain) (statusCode int, err error)
 }
 
-func NewUserservice(repo V1Domains.UserRepository, repoToken V1Domains.TokenRepository, mailer mailer.OTPMailer, redisCache caches.RedisCache) Userservice {
+func NewUserservice(repo V1Domains.UserRepository, repoToken V1Repository.TokenRepository, licenseRepo V1Repository.LicenseRepository, mailer mailer.OTPMailer, redisCache caches.RedisCache) Userservice {
 	return &userservice{
 		repo:       repo,
 		repoToken:  repoToken,
+		licenseRepo: licenseRepo,
 		mailer:     mailer,
 		redisCache: redisCache,
 	}
@@ -60,7 +63,18 @@ func (user *userservice) Store(ctx context.Context, inDom *V1Domains.UserDomain)
 	if err != nil {
 		return V1Domains.UserDomain{}, http.StatusInternalServerError, err
 	}
+	licenseID, err := user.licenseRepo.CreateFreeLicense(ctx, outDom.UserID)
+	if err != nil {
+		logger.ErrorF("failed to create free license", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, err)
+		return V1Domains.UserDomain{}, http.StatusInternalServerError, err
+	}
 
+	outDom.LicenseID = licenseID
+	_, err = user.UpdateUserData(ctx, &outDom)
+	if err != nil {
+		logger.ErrorF("failed to update user data for license", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, err)
+		return V1Domains.UserDomain{}, http.StatusInternalServerError, err
+	}
 	return outDom, http.StatusCreated, nil
 }
 

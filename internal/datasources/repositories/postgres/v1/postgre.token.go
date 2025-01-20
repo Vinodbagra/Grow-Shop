@@ -18,10 +18,15 @@ type postgreTokenRepository struct {
 	conn *sqlx.DB
 }
 
-func NewTokenRepository(conn *sqlx.DB) V1Domains.TokenRepository {
+func NewTokenRepository(conn *sqlx.DB) TokenRepository {
 	return &postgreTokenRepository{
 		conn: conn,
 	}
+}
+
+type TokenRepository interface {
+	CreateToken(ctx context.Context, userID uuid.UUID) (token uuid.UUID,err error)
+	ValidateToken(ctx context.Context, token uuid.UUID) (tokens V1Domains.TokenDomain,flag bool, err error)
 }
 
 func (r *postgreTokenRepository) CreateToken(ctx context.Context, userID uuid.UUID) (uuid.UUID, error) {

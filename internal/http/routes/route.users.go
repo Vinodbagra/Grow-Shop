@@ -20,7 +20,8 @@ type usersRoutes struct {
 func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.RedisCache, authMiddleware gin.HandlerFunc, mailer mailer.OTPMailer) *usersRoutes {
 	V1UserRepository := V1PostgresRepository.NewUserRepository(db)
 	V1TokenRepository := V1PostgresRepository.NewTokenRepository(db)
-	V1Userservice := V1service.NewUserservice(V1UserRepository, V1TokenRepository, mailer, redisCache)
+	V1LicenseRepository := V1PostgresRepository.NewLicenseRepository(db)
+	V1Userservice := V1service.NewUserservice(V1UserRepository, V1TokenRepository, V1LicenseRepository, mailer, redisCache)
 	V1UserHandler := V1Handler.NewUserHandler(V1Userservice, redisCache)
 
 	return &usersRoutes{V1Handler: V1UserHandler, router: router, db: db, authMiddleware: authMiddleware}
