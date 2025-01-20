@@ -28,13 +28,12 @@ func NewShopsRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.Redis
 	return &shopsRoutes{V1Handler: V1ShopHandler, router: router, db: db, authMiddleware: authMiddleware}
 }
 
-
 func (r *shopsRoutes) Routes() {
 	// Routes V1
 	V1Route := r.router.Group("/v1")
 	{
 		// shops
-		// POST --> to create new 
+		// POST --> to create new
 		// PUT --> to update existing data
 		// GET --> to get existing data
 		shopRoute := V1Route.Group("/shops")
@@ -45,6 +44,8 @@ func (r *shopsRoutes) Routes() {
 			// ...
 			// create a put api for updating user data
 			shopRoute.POST("/", r.V1Handler.CreateShop)
+			shopRoute.GET("/", r.V1Handler.GetShopData)
+			shopRoute.PUT(":id", r.V1Handler.UpdateShopData)
 			//shopRoute.GET("/get", r.V1Handler.GetShop)
 			// handler --> service --> repo
 		}
