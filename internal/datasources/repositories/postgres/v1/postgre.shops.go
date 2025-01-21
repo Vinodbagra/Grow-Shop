@@ -30,10 +30,10 @@ func (r *postgreShopRepository) CreateShop(ctx context.Context, inDom *V1Domains
 	shopRecord := records.FromShopV1Domain(inDom)
 	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO users(shop_name,user_id,user_name, created_at) VALUES (uuid_generate_v4(), :shop_name,user_name, :created_at)`, shopRecord)
 	if err != nil {
-		return shopRecord.ToShopDomain{}, err
+		return V1Domains.ShopDomain{}.UserID, err
 	}
 
-	return shopRecord.ToV1Domain(),nil// should return something else?
+	return shopRecord.ToV1Domain().UserID, nil // should return something else?
 }
 
 func (r *postgreShopRepository) GetShopByID(ctx context.Context, inDom *V1Domains.ShopDomain) (outDomain V1Domains.ShopDomain, err error) {

@@ -29,6 +29,8 @@ func NewUsersRoute(router *gin.RouterGroup, db *sqlx.DB, redisCache caches.Redis
 
 func (r *usersRoutes) Routes() {
 	// Routes V1
+	// /home/user_rgister
+	// api for register = /home/user/v1/register
 	V1Route := r.router.Group("/v1")
 	{
 		V1Route.POST("/register", r.V1Handler.Register)

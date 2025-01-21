@@ -12,3 +12,5 @@ type Tokens struct {
 	CreatedAt time.Time    `db:"created_at"` // Record creation time
 	UpdatedAt time.Time    `db:"updated_at"`
 }
+
+

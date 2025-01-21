@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/lib/pq"
+	V1Domains "github.com/snykk/grow-shop/internal/business/domains/v1"
 )
 
 type Shops struct {
@@ -22,4 +23,29 @@ type Shops struct {
 	Images       pq.StringArray `db:"images"`        // List of image URLs
 	CreatedAt    time.Time      `db:"created_at"`    // Record creation time
 	UpdatedAt    time.Time      `db:"updated_at"`    // Last update time
+}
+
+func (s *Shops) ToV1Domain() V1Domains.ShopDomain {
+	return V1Domains.ShopDomain{
+		ShopName: s.ShopName,
+		UserName:  s.UserName,
+		CreatedAt: s.CreatedAt,
+		UpdatedAt: s.UpdatedAt,
+	}
+}
+
+func FromShopV1Domain(s *V1Domains.ShopDomain) Shops {
+	return Shops{
+		UserName:     s.UserName,
+		ShopName:     s.ShopName,
+		MobileNo:     s.MobileNo,
+		Address:      s.Address,
+		BusinessName: s.BusinessName,
+		Gender:       s.Gender,
+		Shops:        s.Shops,
+		LicenseID:    s.LicenseID,
+		Images:       s.Images,
+		CreatedAt:    s.CreatedAt,
+		UpdatedAt:    s.UpdatedAt,
+	}
 }
