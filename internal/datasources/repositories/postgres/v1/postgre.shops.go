@@ -27,7 +27,7 @@ func NewShopRepository(conn *sqlx.DB) ShopRepository {
 }
 
 func (r *postgreShopRepository) CreateShop(ctx context.Context, inDom *V1Domains.ShopDomain) (shopID uuid.UUID, err error) {
-	shopRecord := records.FromShopV1Domain(inDom)
+	shopRecord := records.FromShopsV1Domain(inDom)
 	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO users(shop_name,user_id,user_name, created_at) VALUES (uuid_generate_v4(), :shop_name,user_name, :created_at)`, shopRecord)
 	if err != nil {
 		return V1Domains.ShopDomain{}.UserID, err
