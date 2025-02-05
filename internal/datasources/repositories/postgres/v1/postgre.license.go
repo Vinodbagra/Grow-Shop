@@ -33,12 +33,11 @@ func (r *postgreLicenseRepository) CreateFreeLicense(ctx context.Context, userID
 	logger.InfoF("function name %s recieved the request to create free license", logrus.Fields{constants.LoggerCategory: constants.LoggerCategoryServer}, methodName)
 
 	licenseData := records.License{
-		LicenseID: uuid.New(),
 		UserID:    userID,
 		ShopLimit: 1,
 		Validity:  time.Now().Add(30 * 24 * time.Hour), // 30 days from now
 	}
-	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO license(license_id, user_id, validity, license_type, shop_limit) VALUES (license_id, :user_id, :validity, :license_type, :shop_limit, :created_at)`, licenseData)
+	_, err = r.conn.NamedQueryContext(ctx, `INSERT INTO license(license_id, user_id, validity, license_type, shop_limit) VALUES (uuid_generate_v4(), :user_id, :validity, :license_type, :shop_limit)`, licenseData)
 	if err != nil {
 		return uuid.Nil, err
 	}
